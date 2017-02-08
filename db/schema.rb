@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170208080920) do
+ActiveRecord::Schema.define(version: 20170208081821) do
 
   create_table "alerts", force: :cascade do |t|
     t.string   "sensor_name"
@@ -70,6 +70,14 @@ ActiveRecord::Schema.define(version: 20170208080920) do
     t.datetime "updated_at", null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_humidities_on_device_id"
+  end
+
+  create_table "lights", force: :cascade do |t|
+    t.float    "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "device_id"
+    t.index ["device_id"], name: "index_lights_on_device_id"
   end
 
   create_table "motions", force: :cascade do |t|

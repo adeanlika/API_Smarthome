@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :lights
   resources :motions
   resources :humidities
   resources :temperatures
