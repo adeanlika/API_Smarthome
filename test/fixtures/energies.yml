@@ -1,0 +1,30 @@
+# == Schema Information
+#
+# Table name: energies
+#
+#  id         :integer          not null, primary key
+#  power      :float
+#  Etotal     :float
+#  Eday       :float
+#  Emonth     :float
+#  Eyear      :float
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  home_id    :integer
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  power: 1.5
+  Etotal: 1.5
+  Eday: 1.5
+  Emonth: 1.5
+  Eyear: 1.5
+
+two:
+  power: 1.5
+  Etotal: 1.5
+  Eday: 1.5
+  Emonth: 1.5
+  Eyear: 1.5
