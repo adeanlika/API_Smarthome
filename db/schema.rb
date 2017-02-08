@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170207033326) do
+ActiveRecord::Schema.define(version: 20170208080920) do
 
   create_table "alerts", force: :cascade do |t|
     t.string   "sensor_name"
@@ -72,15 +72,23 @@ ActiveRecord::Schema.define(version: 20170207033326) do
     t.index ["device_id"], name: "index_humidities_on_device_id"
   end
 
+  create_table "motions", force: :cascade do |t|
+    t.float    "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "device_id"
+    t.index ["device_id"], name: "index_motions_on_device_id"
+  end
+
   create_table "relays", force: :cascade do |t|
-    t.binary   "relay1",      limit: 1, default: "x'30'"
-    t.binary   "relay2",      limit: 1, default: "x'30'"
-    t.binary   "relay3",      limit: 1, default: "x'30'"
-    t.binary   "relay4",      limit: 1, default: "x'30'"
-    t.binary   "relay5",      limit: 1, default: "x'30'"
-    t.binary   "relay6",      limit: 1, default: "x'30'"
-    t.binary   "relay7",      limit: 1, default: "x'30'"
-    t.binary   "relay8",      limit: 1, default: "x'30'"
+    t.binary   "relay1",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay2",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay3",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay4",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay5",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay6",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay7",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay8",      limit: 1, default: "x'7827333027'"
     t.string   "relay1name"
     t.string   "relay2name"
     t.string   "relay3name"
@@ -90,12 +98,12 @@ ActiveRecord::Schema.define(version: 20170207033326) do
     t.string   "relay7name"
     t.string   "relay8name"
     t.string   "acname"
-    t.binary   "acmode",      limit: 4, default: "x'30'"
-    t.binary   "acstate",     limit: 4, default: "x'30'"
-    t.binary   "acspeed",     limit: 4, default: "x'30'"
-    t.binary   "acdirection", limit: 4, default: "x'30'"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.binary   "acmode",      limit: 4, default: "x'7827333027'"
+    t.binary   "acstate",     limit: 4, default: "x'7827333027'"
+    t.binary   "acspeed",     limit: 4, default: "x'7827333027'"
+    t.binary   "acdirection", limit: 4, default: "x'7827333027'"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_relays_on_device_id"
   end
