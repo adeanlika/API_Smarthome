@@ -1,15 +1,13 @@
 # == Schema Information
 #
-# Table name: lights
+# Table name: motion_alert_logs
 #
 #  id         :integer          not null, primary key
-#  value      :float
+#  warning    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  device_id  :integer
+#  motion_id  :integer
 #
 
-class Light < ApplicationRecord
-belongs_to :device
-has_many :light_alert_logs
+class MotionAlertLog < ApplicationRecord
 end

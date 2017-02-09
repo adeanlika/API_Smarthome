@@ -1,23 +1,18 @@
 # == Schema Information
 #
-# Table name: homes
+# Table name: motion_alert_logs
 #
 #  id         :integer          not null, primary key
-#  name       :string
+#  warning    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  motion_id  :integer
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  sensor: MyString
-  max: 1.5
-  min: 1.5
+  warning: MyString
 
 two:
-  name: MyString
-  sensor: MyString
-  max: 1.5
-  min: 1.5
+  warning: MyString

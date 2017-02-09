@@ -14,4 +14,5 @@
 #
 class Energy < ApplicationRecord
 	belongs_to :home
+	has_many :energy_alert_logs
 end

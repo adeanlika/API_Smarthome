@@ -11,4 +11,5 @@
 
 class Humidity < ApplicationRecord
 	belongs_to :device
+	has_many :hum_alert_logs
 end

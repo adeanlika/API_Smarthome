@@ -10,18 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170208081821) do
+ActiveRecord::Schema.define(version: 20170209070503) do
 
-  create_table "alerts", force: :cascade do |t|
-    t.string   "sensor_name"
-    t.float    "value"
-    t.string   "warning"
+  create_table "alert_settings", force: :cascade do |t|
+    t.integer  "value"
+    t.integer  "operation"
+    t.integer  "sensor_type"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "home_id"
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_alerts_on_device_id"
-    t.index ["home_id"], name: "index_alerts_on_home_id"
+    t.index ["device_id"], name: "index_alert_settings_on_device_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -46,11 +44,18 @@ ActiveRecord::Schema.define(version: 20170208081821) do
     t.index ["home_id"], name: "index_energies_on_home_id"
   end
 
+  create_table "energy_alert_logs", force: :cascade do |t|
+    t.string   "warning"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "energies_id"
+    t.integer  "light_id"
+    t.index ["energies_id"], name: "index_energy_alert_logs_on_energies_id"
+    t.index ["light_id"], name: "index_energy_alert_logs_on_light_id"
+  end
+
   create_table "homes", force: :cascade do |t|
     t.string   "name"
-    t.string   "sensor"
-    t.float    "max"
-    t.float    "min"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -64,6 +69,14 @@ ActiveRecord::Schema.define(version: 20170208081821) do
     t.index ["user_id"], name: "index_homes_users_on_user_id"
   end
 
+  create_table "hum_alert_logs", force: :cascade do |t|
+    t.string   "warning"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "humidity_id"
+    t.index ["humidity_id"], name: "index_hum_alert_logs_on_humidity_id"
+  end
+
   create_table "humidities", force: :cascade do |t|
     t.float    "value"
     t.datetime "created_at", null: false
@@ -72,12 +85,28 @@ ActiveRecord::Schema.define(version: 20170208081821) do
     t.index ["device_id"], name: "index_humidities_on_device_id"
   end
 
+  create_table "light_alert_logs", force: :cascade do |t|
+    t.string   "warning"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "light_id"
+    t.index ["light_id"], name: "index_light_alert_logs_on_light_id"
+  end
+
   create_table "lights", force: :cascade do |t|
     t.float    "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_lights_on_device_id"
+  end
+
+  create_table "motion_alert_logs", force: :cascade do |t|
+    t.string   "warning"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "motion_id"
+    t.index ["motion_id"], name: "index_motion_alert_logs_on_motion_id"
   end
 
   create_table "motions", force: :cascade do |t|
@@ -89,14 +118,14 @@ ActiveRecord::Schema.define(version: 20170208081821) do
   end
 
   create_table "relays", force: :cascade do |t|
-    t.binary   "relay1",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay2",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay3",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay4",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay5",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay6",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay7",      limit: 1, default: "x'7827333027'"
-    t.binary   "relay8",      limit: 1, default: "x'7827333027'"
+    t.binary   "relay1",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay2",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay3",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay4",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay5",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay6",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay7",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay8",      limit: 1, default: "x'78273738323733333330323727'"
     t.string   "relay1name"
     t.string   "relay2name"
     t.string   "relay3name"
@@ -106,14 +135,22 @@ ActiveRecord::Schema.define(version: 20170208081821) do
     t.string   "relay7name"
     t.string   "relay8name"
     t.string   "acname"
-    t.binary   "acmode",      limit: 4, default: "x'7827333027'"
-    t.binary   "acstate",     limit: 4, default: "x'7827333027'"
-    t.binary   "acspeed",     limit: 4, default: "x'7827333027'"
-    t.binary   "acdirection", limit: 4, default: "x'7827333027'"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.binary   "acmode",      limit: 4, default: "x'78273738323733333330323727'"
+    t.binary   "acstate",     limit: 4, default: "x'78273738323733333330323727'"
+    t.binary   "acspeed",     limit: 4, default: "x'78273738323733333330323727'"
+    t.binary   "acdirection", limit: 4, default: "x'78273738323733333330323727'"
+    t.datetime "created_at",                                                      null: false
+    t.datetime "updated_at",                                                      null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_relays_on_device_id"
+  end
+
+  create_table "temp_alert_logs", force: :cascade do |t|
+    t.string   "warning"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "temperature_id"
+    t.index ["temperature_id"], name: "index_temp_alert_logs_on_temperature_id"
   end
 
   create_table "temperatures", force: :cascade do |t|

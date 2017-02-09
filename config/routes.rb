@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :motion_alert_logs
+  resources :temp_alert_logs
+  resources :energy_alert_logs
+  resources :light_alert_logs
+  resources :hum_alert_logs
+  resources :alert_settings
   resources :lights
   resources :motions
   resources :humidities
