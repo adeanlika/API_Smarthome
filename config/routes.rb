@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :motion_alert_logs
   resources :temp_alert_logs
   resources :energy_alert_logs
@@ -10,7 +11,6 @@ Rails.application.routes.draw do
   resources :humidities
   resources :temperatures
   resources :relays
-  resources :alerts
   resources :energies
   resources :devices
   resources :homes_users

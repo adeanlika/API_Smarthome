@@ -11,4 +11,5 @@
 
 class Temperature < ApplicationRecord
 	belongs_to :device
+	has_many :temp_alert_logs
 end
