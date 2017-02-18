@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170209070503) do
+ActiveRecord::Schema.define(version: 20170217102458) do
 
   create_table "alert_settings", force: :cascade do |t|
     t.integer  "value"
@@ -118,14 +118,14 @@ ActiveRecord::Schema.define(version: 20170209070503) do
   end
 
   create_table "relays", force: :cascade do |t|
-    t.binary   "relay1",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay2",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay3",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay4",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay5",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay6",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay7",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay8",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay1",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay2",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay3",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay4",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay5",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay6",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay7",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay8",      limit: 1, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
     t.string   "relay1name"
     t.string   "relay2name"
     t.string   "relay3name"
@@ -135,12 +135,12 @@ ActiveRecord::Schema.define(version: 20170209070503) do
     t.string   "relay7name"
     t.string   "relay8name"
     t.string   "acname"
-    t.binary   "acmode",      limit: 4, default: "x'78273738323733333330323727'"
-    t.binary   "acstate",     limit: 4, default: "x'78273738323733333330323727'"
-    t.binary   "acspeed",     limit: 4, default: "x'78273738323733333330323727'"
-    t.binary   "acdirection", limit: 4, default: "x'78273738323733333330323727'"
-    t.datetime "created_at",                                                      null: false
-    t.datetime "updated_at",                                                      null: false
+    t.binary   "acmode",      limit: 4, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "acstate",     limit: 4, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "acspeed",     limit: 4, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "acdirection", limit: 4, default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.datetime "created_at",                                                                                                                                                                                                                                                                                      null: false
+    t.datetime "updated_at",                                                                                                                                                                                                                                                                                      null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_relays_on_device_id"
   end
@@ -162,13 +162,32 @@ ActiveRecord::Schema.define(version: 20170209070503) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.string   "provider",               default: "email", null: false
+    t.string   "uid",                    default: "",      null: false
+    t.string   "encrypted_password",     default: "",      null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,       null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "unconfirmed_email"
     t.string   "name"
-    t.string   "username"
+    t.string   "nickname"
+    t.string   "image"
     t.string   "email"
-    t.string   "password"
-    t.binary   "avatar"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "tokens"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
 end

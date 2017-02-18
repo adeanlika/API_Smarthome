@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :motion_alert_logs
   resources :temp_alert_logs
