@@ -34,42 +34,42 @@ class TemperaturesController < ApplicationController
   end
 
 def daily
-   @start_date = params[:start_date]
-   @Temperature = Temperature.group_by_day(:created_at, range: @start_date..Time.now).average(:value).take(8)
+   @start_date = params[:start_date].to_date.beginning_of_day
+   @Temperature = Temperature.group_by_day(:created_at, range: @start_date..Time.now).average(:value).take(7)
    @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
-   @Temperature.shift
+   #@Temperature.shift
    render json: @Temperature
   end
 
   def weekly
-  @start_date = params[:start_date]
-  @Temperature = Temperature.group_by_week(:created_at, range: @start_date..Time.now).average(:value).take(8)
+  @start_date = params[:start_date].to_date.beginning_of_day
+  @Temperature = Temperature.group_by_week(:created_at, range: @start_date..Time.now).average(:value).take(7)
   @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
-   @Temperature.shift
+   #@Temperature.shift
    render json: @Temperature
   end
 
   def monthly
-   @start_date = params[:start_date]
-   @Temperature = Temperature.group_by_month(:created_at, range: @start_date..Time.now, format: "%b %Y").average(:value).take(8)
+   @start_date = params[:start_date].to_date.beginning_of_day
+   @Temperature = Temperature.group_by_month(:created_at, range: @start_date..Time.now, format: "%b %Y").average(:value).take(7)
    @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
-   @Temperature.shift
+#   @Temperature.shift
    render json: @Temperature
   end
 
   def yearly
-    @start_date = params[:start_date]
-    @Temperature = Temperature.group_by_year(:created_at, range: @start_date..Time.now, format: "%Y").average(:value).take(8)
+    @start_date = params[:start_date].to_date.beginning_of_day
+    @Temperature = Temperature.group_by_year(:created_at, range: @start_date..Time.now, format: "%Y").average(:value).take(7)
     @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
-   @Temperature.shift
+  # @Temperature.shift
    render json: @Temperature
   end
 

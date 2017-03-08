@@ -10,4 +10,5 @@
 #
 
 class TempAlertLog < ApplicationRecord
+  belongs_to :temperature
 end

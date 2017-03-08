@@ -18,6 +18,5 @@ has_one :relay
 has_many :humidities
 has_many :temperatures
 has_many :motions
-has_many :lights
 has_many :alert_settings
 end

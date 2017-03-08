@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :co_alert_logs
+  resources :carbondioxides
   mount_devise_token_auth_for 'User', at: 'auth'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
@@ -11,15 +13,16 @@ Rails.application.routes.draw do
   post 'temperatures_weekly', to: 'temperatures#weekly'
   post 'temperatures_monthly', to: 'temperatures#monthly'
   post 'temperatures_yearly', to: 'temperatures#yearly'
-  
-  
+
+  post 'carbondioxide_daily', to: 'carbondioxides#daily'
+  post 'carbondioxide_weekly', to: 'carbondioxides#weekly'
+  post 'carbondioxide_monthly', to: 'carbondioxides#monthly'
+  post 'carbondioxide_yearly', to: 'carbondioxides#yearly'
   resources :motion_alert_logs
   resources :temp_alert_logs
   resources :energy_alert_logs
-  resources :light_alert_logs
   resources :hum_alert_logs
   resources :alert_settings
-  resources :lights
   resources :motions
   resources :humidities
   resources :temperatures

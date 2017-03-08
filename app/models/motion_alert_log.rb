@@ -10,4 +10,5 @@
 #
 
 class MotionAlertLog < ApplicationRecord
+  belongs_to :motion
 end
