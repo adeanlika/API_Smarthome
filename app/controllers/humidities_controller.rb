@@ -1,6 +1,6 @@
 class HumiditiesController < ApplicationController
   before_action :set_humidity, only: [:show, :update, :destroy]
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /humidities
   def index
     @humidities = Humidity.all

@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170218080711) do
+ActiveRecord::Schema.define(version: 20170217102458) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "alert_settings", force: :cascade do |t|
     t.integer  "value"
@@ -19,7 +22,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_alert_settings_on_device_id"
+    t.index ["device_id"], name: "index_alert_settings_on_device_id", using: :btree
   end
 
   create_table "devices", force: :cascade do |t|
@@ -29,7 +32,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "home_id"
-    t.index ["home_id"], name: "index_devices_on_home_id"
+    t.index ["home_id"], name: "index_devices_on_home_id", using: :btree
   end
 
   create_table "energies", force: :cascade do |t|
@@ -41,7 +44,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "home_id"
-    t.index ["home_id"], name: "index_energies_on_home_id"
+    t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
   end
 
   create_table "energy_alert_logs", force: :cascade do |t|
@@ -50,8 +53,8 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "updated_at",  null: false
     t.integer  "energies_id"
     t.integer  "light_id"
-    t.index ["energies_id"], name: "index_energy_alert_logs_on_energies_id"
-    t.index ["light_id"], name: "index_energy_alert_logs_on_light_id"
+    t.index ["energies_id"], name: "index_energy_alert_logs_on_energies_id", using: :btree
+    t.index ["light_id"], name: "index_energy_alert_logs_on_light_id", using: :btree
   end
 
   create_table "homes", force: :cascade do |t|
@@ -61,12 +64,10 @@ ActiveRecord::Schema.define(version: 20170218080711) do
   end
 
   create_table "homes_users", force: :cascade do |t|
-    t.integer  "user_id"
     t.integer  "home_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["home_id"], name: "index_homes_users_on_home_id"
-    t.index ["user_id"], name: "index_homes_users_on_user_id"
+    t.index ["home_id"], name: "index_homes_users_on_home_id", using: :btree
   end
 
   create_table "hum_alert_logs", force: :cascade do |t|
@@ -74,7 +75,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "humidity_id"
-    t.index ["humidity_id"], name: "index_hum_alert_logs_on_humidity_id"
+    t.index ["humidity_id"], name: "index_hum_alert_logs_on_humidity_id", using: :btree
   end
 
   create_table "humidities", force: :cascade do |t|
@@ -82,7 +83,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_humidities_on_device_id"
+    t.index ["device_id"], name: "index_humidities_on_device_id", using: :btree
   end
 
   create_table "light_alert_logs", force: :cascade do |t|
@@ -90,7 +91,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "light_id"
-    t.index ["light_id"], name: "index_light_alert_logs_on_light_id"
+    t.index ["light_id"], name: "index_light_alert_logs_on_light_id", using: :btree
   end
 
   create_table "lights", force: :cascade do |t|
@@ -98,7 +99,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_lights_on_device_id"
+    t.index ["device_id"], name: "index_lights_on_device_id", using: :btree
   end
 
   create_table "motion_alert_logs", force: :cascade do |t|
@@ -106,7 +107,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "motion_id"
-    t.index ["motion_id"], name: "index_motion_alert_logs_on_motion_id"
+    t.index ["motion_id"], name: "index_motion_alert_logs_on_motion_id", using: :btree
   end
 
   create_table "motions", force: :cascade do |t|
@@ -114,18 +115,18 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_motions_on_device_id"
+    t.index ["device_id"], name: "index_motions_on_device_id", using: :btree
   end
 
   create_table "relays", force: :cascade do |t|
-    t.binary   "relay1",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay2",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay3",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay4",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay5",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay6",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay7",      limit: 1, default: "x'78273738323733333330323727'"
-    t.binary   "relay8",      limit: 1, default: "x'78273738323733333330323727'"
+    t.binary   "relay1",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay2",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay3",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay4",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay5",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay6",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay7",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "relay8",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
     t.string   "relay1name"
     t.string   "relay2name"
     t.string   "relay3name"
@@ -135,14 +136,14 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.string   "relay7name"
     t.string   "relay8name"
     t.string   "acname"
-    t.binary   "acmode",      limit: 4, default: "x'78273738323733333330323727'"
-    t.binary   "acstate",     limit: 4, default: "x'78273738323733333330323727'"
-    t.binary   "acspeed",     limit: 4, default: "x'78273738323733333330323727'"
-    t.binary   "acdirection", limit: 4, default: "x'78273738323733333330323727'"
-    t.datetime "created_at",                                                      null: false
-    t.datetime "updated_at",                                                      null: false
+    t.binary   "acmode",      default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "acstate",     default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "acspeed",     default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.binary   "acdirection", default: "x'7827373832373337333833323337333333373333333833333332333333373333333333333337333333333333333833333333333333323333333333333337333333333333333333333333333333333333333333333333333333333333333033333333333333323333333333333337333333323333333733323337323727'"
+    t.datetime "created_at",                                                                                                                                                                                                                                                                            null: false
+    t.datetime "updated_at",                                                                                                                                                                                                                                                                            null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_relays_on_device_id"
+    t.index ["device_id"], name: "index_relays_on_device_id", using: :btree
   end
 
   create_table "temp_alert_logs", force: :cascade do |t|
@@ -150,7 +151,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "temperature_id"
-    t.index ["temperature_id"], name: "index_temp_alert_logs_on_temperature_id"
+    t.index ["temperature_id"], name: "index_temp_alert_logs_on_temperature_id", using: :btree
   end
 
   create_table "temperatures", force: :cascade do |t|
@@ -158,7 +159,7 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_temperatures_on_device_id"
+    t.index ["device_id"], name: "index_temperatures_on_device_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -184,10 +185,10 @@ ActiveRecord::Schema.define(version: 20170218080711) do
     t.text     "tokens"
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
   end
 
 end
