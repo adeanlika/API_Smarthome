@@ -1,6 +1,6 @@
 class TempAlertLogsController < ApplicationController
   before_action :set_temp_alert_log, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /temp_alert_logs
   def index
     @temp_alert_logs = TempAlertLog.all

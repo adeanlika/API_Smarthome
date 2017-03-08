@@ -1,6 +1,6 @@
 class HumAlertLogsController < ApplicationController
   before_action :set_hum_alert_log, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /hum_alert_logs
   def index
     @hum_alert_logs = HumAlertLog.all

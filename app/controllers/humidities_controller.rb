@@ -1,6 +1,6 @@
 class HumiditiesController < ApplicationController
   before_action :set_humidity, only: [:show, :update, :destroy]
-
+  #before_action :authenticate_user!
   # GET /humidities
   def index
     @humidities = Humidity.all
@@ -36,6 +36,49 @@ class HumiditiesController < ApplicationController
   # DELETE /humidities/1
   def destroy
     @humidity.destroy
+  end
+
+  
+
+  def daily
+    @start_date = params[:start_date]
+    @Humidity = Humidity.group_by_day(:created_at, range: @start_date..Time.now).average(:value).take(8)
+   #@Humidity = Humidity.all.group(:created_at).order(:created_at).average(:value)
+   @Humidity = @Humidity.to_a
+   keys = [:date, :value]
+   @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}
+   @Humidity.shift
+   render json: @Humidity
+  end
+
+  def weekly
+  @start_date = params[:start_date]
+  @Humidity = Humidity.group_by_week(:created_at, range: @start_date..Time.now).average(:value).take(8)
+  @Humidity = @Humidity.to_a
+  keys = [:date, :value]
+  @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}
+  @Humidity.shift
+  render json: @Humidity
+  end
+
+  def monthly
+   @start_date = params[:start_date]
+   @Humidity = Humidity.group_by_month(:created_at, range: @start_date..Time.now).average(:value).take(8)
+   @Humidity = @Humidity.to_a
+   keys = [:date, :value]
+   @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}
+   @Humidity.shift
+   render json: @Humidity
+  end
+
+  def yearly
+    @start_date = params[:start_date]
+    @Humidity = Humidity.group_by_year(:created_at, range: @start_date..Time.now, format: "%Y").average(:value).take(8)
+    @Humidity = @Humidity.to_a
+    keys = [:date, :value]
+    @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}
+    @Humidity.shift
+    render json: @Humidity
   end
 
   private

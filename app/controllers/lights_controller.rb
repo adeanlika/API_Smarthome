@@ -1,6 +1,6 @@
 class LightsController < ApplicationController
   before_action :set_light, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /lights
   def index
     @lights = Light.all

@@ -1,6 +1,6 @@
 class MotionAlertLogsController < ApplicationController
   before_action :set_motion_alert_log, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /motion_alert_logs
   def index
     @motion_alert_logs = MotionAlertLog.all

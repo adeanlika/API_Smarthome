@@ -1,6 +1,6 @@
 class LightAlertLogsController < ApplicationController
   before_action :set_light_alert_log, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /light_alert_logs
   def index
     @light_alert_logs = LightAlertLog.all

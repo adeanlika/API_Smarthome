@@ -1,6 +1,6 @@
 class EnergyAlertLogsController < ApplicationController
   before_action :set_energy_alert_log, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /energy_alert_logs
   def index
     @energy_alert_logs = EnergyAlertLog.all

@@ -1,9 +1,9 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /homes
   def index
-    @homes = Home.all
+    @homes = current_user.homes
 
     render json: @homes
   end

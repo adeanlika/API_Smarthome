@@ -1,6 +1,6 @@
 class AlertSettingsController < ApplicationController
   before_action :set_alert_setting, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /alert_settings
   def index
     @alert_settings = AlertSetting.all
