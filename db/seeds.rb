@@ -5,23 +5,23 @@
 #
  #movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
  #Character.create(name: 'Luke', movie: movies.first)
-#100.times do |index|
-#	10.times do |index2|
-	#Humidity.create!(value: Faker::Number.normal(50,3.5),
-  #           device_id: 1,
-  #          created_at: index.days.ago)
-	#	end
-#end
-#p "Created #{Humidity.count} Humidities"
+100.times do |index|
+	10.times do |index2|
+	Humidity.create!(value: Faker::Number.normal(50,3.5),
+             device_id: 1,
+            created_at: index.days.ago)
+		end
+end
+p "Created #{Humidity.count} Humidities"
 
-#100.times do |index|
- 	#10.times do |index2|
-  #	Temperature.create!(value: Faker::Number.normal(30,3.5),
-    #	            created_at: index.days.ago)
-	#		end
-#end
+100.times do |index|
+ 	10.times do |index2|
+  	Temperature.create!(value: Faker::Number.normal(30,3.5),
+    	            created_at: index.days.ago)
+			end
+end
 
-#p "Created #{Temperature.count} Temperatures"
+p "Created #{Temperature.count} Temperatures"
 
 100.times do |index|
  	10.times do |index2|
