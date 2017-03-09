@@ -16,7 +16,7 @@ p "Created #{Humidity.count} Humidities"
 
 100.times do |index|
  	10.times do |index2|
-  	Temperature.create!(value: Faker::Number.normal(30,3.5),
+  	Temperature.create!(value: Faker::Number.normal(25,8),
                   device_id: 5,
     	            created_at: index.days.ago)
 			end
@@ -26,7 +26,7 @@ p "Created #{Temperature.count} Temperatures"
 
 100.times do |index|
  	10.times do |index2|
-  	Carbondioxide.create!(value: Faker::Number.normal(40,3.5),
+  	Carbondioxide.create!(value: Faker::Number.normal(70,15),
                 device_id: 5,
    	            created_at: index.days.ago)
 			end
