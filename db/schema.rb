@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170308102318) do
+ActiveRecord::Schema.define(version: 20170316055738) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,13 +53,14 @@ ActiveRecord::Schema.define(version: 20170308102318) do
 
   create_table "energies", force: :cascade do |t|
     t.float    "power"
-    t.float    "Etotal"
-    t.float    "Eday"
-    t.float    "Emonth"
-    t.float    "Eyear"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "home_id"
+    t.float    "energy_total"
+    t.float    "energy_delta"
+    t.float    "pf"
+    t.float    "thd"
+    t.float    "current"
     t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
   end
 

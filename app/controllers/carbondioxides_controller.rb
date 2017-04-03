@@ -1,6 +1,6 @@
 class CarbondioxidesController < ApplicationController
   before_action :set_carbondioxide, only: [:show, :update, :destroy]
-before_action :authenticate_user!
+  #before_action :authenticate_user!
   # GET /carbondioxides
   def index
     @carbondioxides = Carbondioxide.all
@@ -39,7 +39,7 @@ before_action :authenticate_user!
   end
   def daily
     @start_date = params[:start_date].to_date.beginning_of_day
-    @Carbondioxide = Carbondioxide.group_by_day(:created_at, range: @start_date..Time.now).average(:value).take(7)
+    @Carbondioxide = Carbondioxide.group_by_day(:created_at, range: @start_date..Time.now).average(:value).take(6)
    #@Carbondioxide = Carbondioxide.all.group(:created_at).order(:created_at).average(:value)
    @Carbondioxide = @Carbondioxide.to_a
    keys = [:date, :value]
@@ -50,7 +50,7 @@ before_action :authenticate_user!
 
   def weekly
   @start_date = params[:start_date].to_date.beginning_of_day
-  @Carbondioxide = Carbondioxide.group_by_week(:created_at, range: @start_date..Time.now).average(:value).take(7)
+  @Carbondioxide = Carbondioxide.group_by_week(:created_at, range: @start_date..Time.now).average(:value).take(6)
   @Carbondioxide = @Carbondioxide.to_a
   keys = [:date, :value]
   @Carbondioxide = @Carbondioxide.each.map {|value| Hash[keys.zip(value)]}
@@ -60,7 +60,7 @@ before_action :authenticate_user!
 
   def monthly
    @start_date = params[:start_date].to_date.beginning_of_day
-   @Carbondioxide = Carbondioxide.group_by_month(:created_at, range: @start_date..Time.now, format: "%b %Y").average(:value).take(7)
+   @Carbondioxide = Carbondioxide.group_by_month(:created_at, range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
    @Carbondioxide = @Carbondioxide.to_a
    keys = [:date, :value]
    @Carbondioxide = @Carbondioxide.each.map {|value| Hash[keys.zip(value)]}
@@ -70,7 +70,7 @@ before_action :authenticate_user!
 
   def yearly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @Carbondioxide = Carbondioxide.group_by_year(:created_at, range: @start_date..Time.now, format: "%Y").average(:value).take(7)
+    @Carbondioxide = Carbondioxide.group_by_year(:created_at, range: @start_date..Time.now, format: "%Y").average(:value).take(6)
     @Carbondioxide = @Carbondioxide.to_a
     keys = [:date, :value]
     @Carbondioxide = @Carbondioxide.each.map {|value| Hash[keys.zip(value)]}

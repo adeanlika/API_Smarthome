@@ -1,6 +1,6 @@
 class MotionsController < ApplicationController
   before_action :set_motion, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   # GET /motions
   def index
     @motions = Motion.all
