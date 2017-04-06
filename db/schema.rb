@@ -10,19 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170316055738) do
+ActiveRecord::Schema.define(version: 20170406023546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "alert_settings", force: :cascade do |t|
-    t.integer  "value"
-    t.integer  "operation"
-    t.integer  "sensor_type"
+  create_table "alert_logs", force: :cascade do |t|
+    t.string   "sensor_name"
+    t.float    "value"
+    t.string   "status"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_alert_settings_on_device_id", using: :btree
+    t.index ["device_id"], name: "index_alert_logs_on_device_id", using: :btree
   end
 
   create_table "carbondioxides", force: :cascade do |t|
@@ -52,15 +52,18 @@ ActiveRecord::Schema.define(version: 20170316055738) do
   end
 
   create_table "energies", force: :cascade do |t|
-    t.float    "power"
+    t.float    "pwr"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "home_id"
-    t.float    "energy_total"
+    t.float    "total"
     t.float    "energy_delta"
-    t.float    "pf"
-    t.float    "thd"
-    t.float    "current"
+    t.float    "pfA"
+    t.float    "tvA"
+    t.float    "cA"
+    t.float    "vA"
+    t.float    "rpA"
+    t.integer  "devid"
     t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
   end
 
@@ -76,6 +79,12 @@ ActiveRecord::Schema.define(version: 20170316055738) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float    "lowertemp"
+    t.float    "uppertemp"
+    t.float    "lowerhum"
+    t.float    "upperhum"
+    t.float    "lowerco"
+    t.float    "upperco"
   end
 
   create_table "homes_users", force: :cascade do |t|
@@ -192,6 +201,7 @@ ActiveRecord::Schema.define(version: 20170316055738) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
   end
 
+  add_foreign_key "alert_logs", "devices"
   add_foreign_key "carbondioxides", "devices"
   add_foreign_key "co_alert_logs", "carbondioxides"
   add_foreign_key "homes_users", "users"

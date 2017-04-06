@@ -38,7 +38,6 @@ class EnergiesController < ApplicationController
     @energy.destroy
   end
 
-
   def daily
   #@energy = Energy.select("id,created_at").where(:created_at => (params[:start_date].to_date.beginning_of_day)..Time.now)
   #@energy = Energy.select("date_trunc( 'day', created_at ) as day, sum(energy_delta) as total_energy").group('day').take(6).order(created_at: :desc)
@@ -98,8 +97,9 @@ render json: @energy
 
     # Only allow a trusted parameter "white list" through.
     def energy_params
-      params.require(:energy).permit(:power, :Etotal, :Eday, :Emonth, :Eyear)
+    params.require(:energy).permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tvA, :rpA, :pfA, :home_id)
     end
+
 
 
 end
