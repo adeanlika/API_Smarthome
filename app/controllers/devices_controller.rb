@@ -18,7 +18,17 @@ class DevicesController < ApplicationController
     @device = Device.new(device_params)
 
     if @device.save
-      render json: @device, status: :created, location: @device
+      @humidity =  Humidity.new(value:0,device_id:@device.id)
+      @humidity.save
+      @temperature =  Temperature.new(value:0,device_id:@device.id)
+      @temperature.save
+      @motion = Motion.new(value:0,device_id:@device.id)
+      @motion.save
+      @carbondioxide = Carbondioxide.new(value:0,device_id:@device.id)
+      @carbondioxide.save
+      @light = Light.new(value:0,device_id:@device.id)
+      @light.save
+      render json: @device, status: :created
     else
       render json: @device.errors, status: :unprocessable_entity
     end
@@ -101,6 +111,22 @@ class DevicesController < ApplicationController
            @alert.save
          else if params[:co].to_s > @upperco.to_s
             @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: params[:device_id],value: params[:co],status: 'CO2 too high')
+            @alert.save
+          end
+        end
+      end
+      if params[:lux].present?
+        @light = Light.new(value: params[:lux],device_id: params[:device_id])
+        @light.save
+        @lowerflux= Home.where('homes.id = ?', params[:home_id]).select("lowerflux").to_a
+        @lowerflux = @lowerflux.map {|x| x.lowerflux}
+        @upperflux= Home.where('homes.id = ?', params[:home_id]).select("upperflux").to_a
+        @upperflux = @upperflux.map {|x| x.upperflux}
+         if params[:lux].to_s < @lowerflux.to_s
+           @alert = AlertLog.new(sensor_name: 'Light',device_id: params[:device_id],value: params[:co],status: 'Flux too low')
+           @alert.save
+         else if params[:lux].to_s > @upperflux.to_s
+            @alert = AlertLog.new(sensor_name: 'Light',device_id: params[:device_id],value: params[:co],status: 'Flux too high')
             @alert.save
           end
         end

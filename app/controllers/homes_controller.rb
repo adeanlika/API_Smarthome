@@ -38,7 +38,7 @@ class HomesController < ApplicationController
     @home.destroy
   end
   def current()
-    @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2").last
+    @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
     render json: @current
   end
   def current_energy
@@ -55,34 +55,7 @@ class HomesController < ApplicationController
       render json: @energy.errors, status: :unprocessable_entity
     end
   end
-  def get_data_sensor
-    @carbondioxides = Carbondioxide.new('carbondioxides.value'params[:co2])
-    if @carbondioxides.save
-      render json: @carbondioxides, status: :created # location: @energy
-    else
-      render json: @carbondioxides.errors, status: :unprocessable_entity
-    end
-    @temperatures= Temperature.new('temperatures.value'params[:te])
-    if @temperatures.save
-      render json: @temperatures, status: :created # location: @energy
-    else
-      render json: @temperatures.errors, status: :unprocessable_entity
-    end
-    @humidities = Humidity.new('humidities.value'params[:hu])
-    if @humidities.save
-      render json: @humidities, status: :created # location: @energy
-    else
-      render json: @humidities.errors, status: :unprocessable_entity
-    end
-    @motions = Motion.new('motions.value'params[:mo])
-    if @motions.save
-      render json: @motions, status: :created # location: @energy
-    else
-      render json: @motions.errors, status: :unprocessable_entity
-    end
 
-
-  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_home

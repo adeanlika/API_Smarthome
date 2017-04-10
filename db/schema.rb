@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406023546) do
+ActiveRecord::Schema.define(version: 20170410054126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,14 +31,6 @@ ActiveRecord::Schema.define(version: 20170406023546) do
     t.datetime "updated_at", null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_carbondioxides_on_device_id", using: :btree
-  end
-
-  create_table "co_alert_logs", force: :cascade do |t|
-    t.string   "warning"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.integer  "carbondioxide_id"
-    t.index ["carbondioxide_id"], name: "index_co_alert_logs_on_carbondioxide_id", using: :btree
   end
 
   create_table "devices", force: :cascade do |t|
@@ -67,14 +59,6 @@ ActiveRecord::Schema.define(version: 20170406023546) do
     t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
   end
 
-  create_table "energy_alert_logs", force: :cascade do |t|
-    t.string   "warning"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "energies_id"
-    t.index ["energies_id"], name: "index_energy_alert_logs_on_energies_id", using: :btree
-  end
-
   create_table "homes", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -85,6 +69,8 @@ ActiveRecord::Schema.define(version: 20170406023546) do
     t.float    "upperhum"
     t.float    "lowerco"
     t.float    "upperco"
+    t.float    "lowerflux"
+    t.float    "upperflux"
   end
 
   create_table "homes_users", force: :cascade do |t|
@@ -96,14 +82,6 @@ ActiveRecord::Schema.define(version: 20170406023546) do
     t.index ["user_id"], name: "index_homes_users_on_user_id", using: :btree
   end
 
-  create_table "hum_alert_logs", force: :cascade do |t|
-    t.string   "warning"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "humidity_id"
-    t.index ["humidity_id"], name: "index_hum_alert_logs_on_humidity_id", using: :btree
-  end
-
   create_table "humidities", force: :cascade do |t|
     t.float    "value"
     t.datetime "created_at", null: false
@@ -112,12 +90,12 @@ ActiveRecord::Schema.define(version: 20170406023546) do
     t.index ["device_id"], name: "index_humidities_on_device_id", using: :btree
   end
 
-  create_table "motion_alert_logs", force: :cascade do |t|
-    t.string   "warning"
+  create_table "lights", force: :cascade do |t|
+    t.float    "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer  "motion_id"
-    t.index ["motion_id"], name: "index_motion_alert_logs_on_motion_id", using: :btree
+    t.integer  "device_id"
+    t.index ["device_id"], name: "index_lights_on_device_id", using: :btree
   end
 
   create_table "motions", force: :cascade do |t|
@@ -154,14 +132,6 @@ ActiveRecord::Schema.define(version: 20170406023546) do
     t.datetime "updated_at",                                                                                                                                                                                                                                                                            null: false
     t.integer  "device_id"
     t.index ["device_id"], name: "index_relays_on_device_id", using: :btree
-  end
-
-  create_table "temp_alert_logs", force: :cascade do |t|
-    t.string   "warning"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.integer  "temperature_id"
-    t.index ["temperature_id"], name: "index_temp_alert_logs_on_temperature_id", using: :btree
   end
 
   create_table "temperatures", force: :cascade do |t|
@@ -203,6 +173,6 @@ ActiveRecord::Schema.define(version: 20170406023546) do
 
   add_foreign_key "alert_logs", "devices"
   add_foreign_key "carbondioxides", "devices"
-  add_foreign_key "co_alert_logs", "carbondioxides"
   add_foreign_key "homes_users", "users"
+  add_foreign_key "lights", "devices"
 end
