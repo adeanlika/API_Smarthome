@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :update, :destroy]
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /devices
   def index
     @devices = Device.all

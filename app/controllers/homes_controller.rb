@@ -1,6 +1,6 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :update, :destroy]
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /homes
   def index
     @homes = current_user.homes
@@ -43,7 +43,7 @@ class HomesController < ApplicationController
   end
   def current_energy
     d = Date.today
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at")
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
     @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
     @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
     @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }

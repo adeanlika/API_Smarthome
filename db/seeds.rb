@@ -32,12 +32,13 @@
 # 			end
 # end
 # p "Created #{Carbondioxide.count} Carbondioxide"
-300.times do |index|
+
+100.times do |index|
  	2.times do |index2|
-  	Energy.create!(energy_delta: Faker::Number.normal(180,15),
+    Energy.create!(total: Faker::Number.normal(100,2),
                 home_id: 1,
    	            created_at: index.days.ago)
-			end
+    			end
 end
 p "Created #{Energy.count} Energy_Delta"
 # 5.times do |index|

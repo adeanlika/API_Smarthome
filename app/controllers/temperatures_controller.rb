@@ -1,6 +1,6 @@
 class TemperaturesController < ApplicationController
   before_action :set_temperature, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /temperatures
   def index
     @temperatures = Temperature.all

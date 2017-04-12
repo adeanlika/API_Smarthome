@@ -1,6 +1,6 @@
 class HumiditiesController < ApplicationController
-#  before_action :set_humidity, only: [:show, :update, :destroy]
-#  before_action :authenticate_user!
+before_action :set_humidity, only: [:show, :update, :destroy]
+before_action :authenticate_user!
   # GET /humidities
   def index
     @humidities = Humidity.all
@@ -62,7 +62,7 @@ class HumiditiesController < ApplicationController
 
   def monthly
    @start_date = params[:start_date].to_date.beginning_of_day
-   @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('humidities.created_at', range: @start_date..Time.now, format: "%b %Y")
+   @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('humidities.created_at', range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
    @Humidity = @Humidity.to_a
    keys = [:date, :value]
    @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}

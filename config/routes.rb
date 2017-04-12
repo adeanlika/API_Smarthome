@@ -25,9 +25,10 @@ get 'test', to: 'devices#test'
   resources :homes do
     get 'data_energy', to: 'homes#get_data_energy'
     get 'current_energy', to: 'homes#current_energy'
-    get 'energy_daily', to: 'energies#daily'
-    get 'energy_monthly', to: 'energies#monthly'
-    get 'energy_yearly', to: 'energies#yearly'
+    post 'energy_daily', to: 'energies#daily'
+    post 'energy_weekly', to: 'energies#weekly'
+    post 'energy_monthly', to: 'energies#monthly'
+    post 'energy_yearly', to: 'energies#yearly'
 
     resources :devices do
         get 'current', to: 'homes#current'

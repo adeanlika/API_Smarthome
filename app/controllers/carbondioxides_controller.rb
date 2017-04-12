@@ -1,6 +1,6 @@
 class CarbondioxidesController < ApplicationController
   before_action :set_carbondioxide, only: [:show, :update, :destroy]
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /carbondioxides
   def index
     @carbondioxides = Carbondioxide.all
