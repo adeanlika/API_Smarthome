@@ -1,6 +1,6 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   # GET /homes
   def index
     @homes = current_user.homes
@@ -16,9 +16,10 @@ class HomesController < ApplicationController
   # POST /homes
   def create
     @home = Home.new(home_params)
-
     if @home.save
-      render json: @home, status: :created, location: @home
+      @energy = Energy.new(home_id:@home.id,cA:0,vA:0,pwr:0,energy_delta:0,total:0,tvA:0,rpA:0,pfA:0)
+      @energy.save
+      render json: @energy
     else
       render json: @home.errors, status: :unprocessable_entity
     end
@@ -53,8 +54,22 @@ class HomesController < ApplicationController
     render json: {date: key, value: @energy_by_month.first[key]}
   end
   def get_data_energy
-    @energy = Energy.new(get_data_params)
+    @energy = Energy.new(get_energy_params)
     if @energy.save
+        # @lowerenergy = Home.where('homes.id = ?', params[:home_id]).select("lowerenergy").to_a
+        # @lowerenergy = @lowerenergy.map {|x| x.lowerenergy}
+        # @upperenergy = Home.where('homes.id = ?', params[:home_id]).select("upperenergy").to_a
+        # @upperte = @upperte.map {|x| x.upperenergy}
+        # @
+        #  if params[:te].to_s < @lowerte.to_s
+        #    @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too low')
+        #    @alert.save
+        #   else if params[:te].to_s > @upperte.to_s
+        #     @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too high')
+        #     @alert.save
+          end
+        end
+
       render json: @energy, status: :created # location: @energy
     else
       render json: @energy.errors, status: :unprocessable_entity
@@ -69,9 +84,9 @@ class HomesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def home_params
-      params.require(:home).permit(:name, :sensor, :max, :min)
+      params.permit(:name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy)
     end
-    def get_data_params
+    def get_energy_params
       params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tvA, :rpA, :pfA, :home_id)
     end
 
