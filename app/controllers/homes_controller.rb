@@ -67,8 +67,8 @@ class HomesController < ApplicationController
         #   else if params[:te].to_s > @upperte.to_s
         #     @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too high')
         #     @alert.save
-          end
-        end
+        #  end
+        #end
 
       render json: @energy, status: :created # location: @energy
     else
