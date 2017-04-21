@@ -13,12 +13,10 @@
 
 class Device < ApplicationRecord
 belongs_to :home
-has_many :alerts
 has_one :relay
 has_many :humidities
 has_many :temperatures
 has_many :motions
-has_many :alert_settings
 has_many :carbondioxides
 has_many :alert_logs
 has_many :lights
