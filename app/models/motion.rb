@@ -11,5 +11,4 @@
 
 class Motion < ApplicationRecord
 	belongs_to :device
-	has_many :motion_alert_logs
-end
+	end

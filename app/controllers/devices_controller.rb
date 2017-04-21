@@ -47,13 +47,13 @@ class DevicesController < ApplicationController
     @device.destroy
   end
   def test
-    # d = Date.today
-    # @energy = Energy.joins(:home).where('homes.devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
-    # @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
-    # @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
-    # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
-    # @energy_by_month = @energy_by_month.value
-    render json: @device.errors
+    d = Date.today
+    @energy = Energy.joins(:home).where('homes.devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+    @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+    @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    @energy_by_month = @energy_by_month.value
+    render json: @energy_by_month
   end
   def get_data_sensor
       if params[:te].present?
