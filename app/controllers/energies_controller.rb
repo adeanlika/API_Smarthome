@@ -184,6 +184,6 @@ render json: @energy_by_day
 
     # Only allow a trusted parameter "white list" through.
     def energy_params
-    params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tvA, :rpA, :pfA)
+    params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tcA, :rpA, :pfA)
     end
 end
