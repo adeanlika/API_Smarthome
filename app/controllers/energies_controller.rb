@@ -61,7 +61,7 @@ class EnergiesController < ApplicationController
         # end
       render json: 1, status: :created # location: @energy
     else
-      render json: @energy.errors,status: :unprocessable_entity
+      render json: 0,status: :unprocessable_entity
     end
   end
 
