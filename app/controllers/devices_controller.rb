@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   # GET /devices
   def index
     @devices = Device.all
@@ -47,24 +47,13 @@ class DevicesController < ApplicationController
     @device.destroy
   end
   def test
-
-    @lowerte = Home.where('homes.id = ?', params[:home_id]).select("lowertemp")
-      @lowertte =  @lowerte.to_a
-      @lowertte = @lowertte.map {|x| x.lowertemp}
-      @lowertte = @lowertte.to_s
-
-    #  @temp = params[:te].to_s
-    #  render json:@temp
-    #  @lowerte = @lowerte.to_a
-    if params[:te].to_s < @lowertte
-      @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 1)
-      if @alert.save
-        render json: @alert, status: :created # location: @energy
-       else
-         render json: @alert.errors, status: :unprocessable_entity
-
-      end
-    end
+    # d = Date.today
+    # @energy = Energy.joins(:home).where('homes.devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
+    # @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+    # @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+    # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    # @energy_by_month = @energy_by_month.value
+    render json: @device.errors
   end
   def get_data_sensor
       if params[:te].present?
@@ -145,7 +134,7 @@ class DevicesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def device_params
-      params.require(:device).permit(:name, :productID, :img)
+      params.require(:home).permit(:name, :productID, :img, :home_id)
     end
 
 end

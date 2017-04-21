@@ -1,6 +1,6 @@
 class EnergiesController < ApplicationController
   before_action :set_energy, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:get_data_energy]
   # GET /energies
   def index
     @energies = Energy.all
@@ -36,6 +36,33 @@ class EnergiesController < ApplicationController
   # DELETE /energies/1
   def destroy
     @energy.destroy
+  end
+  def get_data_energy
+    @energy = Energy.new(energy_params)
+    @home = Home.find_by(devid: params[:devid])
+    @energy.home_id = @home.id
+    if @energy.save
+        # @lowerenergy = Home.where('devid= ?', params[:devid]).select("lowerenergy").to_a
+        # @lowerenergy = @lowerenergy.map {|x| x.lowerenergy}
+        # @upperenergy = Home.where('devid = ?', params[:devid]).select("upperenergy").to_a
+        # @upperenergy = @upperenergy.map {|x| x.upperenergy}
+        # d = Date.today
+        # @energy = Energy.joins(:home).where('devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
+        # @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+        # @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+        # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+        # if @energy_by_month.to_s < @lowerte.to_s
+        #    @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too low')
+        #    @alert.save
+        #   else if params[:te].to_s > @upperte.to_s
+        #     @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too high')
+        #     @alert.save
+        #  end
+        # end
+      render json: 1, status: :created # location: @energy
+    else
+      render json: @energy.errors,status: :unprocessable_entity
+    end
   end
 
   def daily
@@ -157,6 +184,6 @@ render json: @energy_by_day
 
     # Only allow a trusted parameter "white list" through.
     def energy_params
-    params.require(:energy).permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tvA, :rpA, :pfA, :home_id)
+    params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tvA, :rpA, :pfA)
     end
 end

@@ -1,10 +1,9 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :update, :destroy]
-  #before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:get_data_energy]
   # GET /homes
   def index
-    @homes = current_user.homes
-
+    @homes = current_user.homes.find_by(:devid)
     render json: @homes
   end
 
@@ -44,7 +43,7 @@ class HomesController < ApplicationController
   end
   def current_energy
     d = Date.today
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = Energy.joins(:home).where('devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
     @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
     @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
     @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
@@ -56,23 +55,26 @@ class HomesController < ApplicationController
   def get_data_energy
     @energy = Energy.new(get_energy_params)
     if @energy.save
-        # @lowerenergy = Home.where('homes.id = ?', params[:home_id]).select("lowerenergy").to_a
+        # @lowerenergy = Home.where('devid= ?', params[:devid]).select("lowerenergy").to_a
         # @lowerenergy = @lowerenergy.map {|x| x.lowerenergy}
-        # @upperenergy = Home.where('homes.id = ?', params[:home_id]).select("upperenergy").to_a
-        # @upperte = @upperte.map {|x| x.upperenergy}
-        # @
-        #  if params[:te].to_s < @lowerte.to_s
+        # @upperenergy = Home.where('devid = ?', params[:devid]).select("upperenergy").to_a
+        # @upperenergy = @upperenergy.map {|x| x.upperenergy}
+        # d = Date.today
+        # @energy = Energy.joins(:home).where('devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
+        # @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+        # @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+        # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+        # if @energy_by_month.to_s < @lowerte.to_s
         #    @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too low')
         #    @alert.save
         #   else if params[:te].to_s > @upperte.to_s
         #     @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too high')
         #     @alert.save
-          end
-        end
-
-      render json: @energy, status: :created # location: @energy
+        #  end
+        # end
+      render json: 1, status: :created # location: @energy
     else
-      render json: @energy.errors, status: :unprocessable_entity
+      render json: @energy.errors,status: :unprocessable_entity
     end
   end
 
@@ -84,10 +86,10 @@ class HomesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def home_params
-      params.permit(:name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy)
+      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy)
     end
     def get_energy_params
-      params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tvA, :rpA, :pfA, :home_id)
+      params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tcA, :rpA, :pfA)
     end
 
 end

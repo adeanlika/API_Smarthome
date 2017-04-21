@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
 
-get 'test', to: 'devices#test'
-
+post 'test', to: 'devices#test'
+get 'data_energy', to: 'energies#get_data_energy'
 #get 'current', to: 'homes#current'
   # post 'carbondioxides_daily', to: 'carbondioxides#daily'
   # post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
@@ -23,7 +23,6 @@ get 'test', to: 'devices#test'
 
   resources :homes_users
   resources :homes do
-    get 'data_energy', to: 'homes#get_data_energy'
     get 'current_energy', to: 'homes#current_energy'
     post 'energy_daily', to: 'energies#daily'
     post 'energy_weekly', to: 'energies#weekly'

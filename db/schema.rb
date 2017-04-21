@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419085840) do
+ActiveRecord::Schema.define(version: 20170421080755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,15 +47,15 @@ ActiveRecord::Schema.define(version: 20170419085840) do
     t.float    "pwr"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.integer  "home_id"
     t.float    "total"
     t.float    "energy_delta"
     t.float    "pfA"
-    t.float    "tvA"
+    t.float    "tcA"
     t.float    "cA"
     t.float    "vA"
     t.float    "rpA"
-    t.integer  "devid"
+    t.string   "devid"
+    t.integer  "home_id"
     t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
   end
 
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20170419085840) do
     t.float    "upperflux"
     t.float    "lowerenergy"
     t.float    "upperenergy"
+    t.string   "devid"
   end
 
   create_table "homes_users", force: :cascade do |t|
@@ -176,6 +177,7 @@ ActiveRecord::Schema.define(version: 20170419085840) do
 
   add_foreign_key "alert_logs", "devices"
   add_foreign_key "carbondioxides", "devices"
+  add_foreign_key "energies", "homes"
   add_foreign_key "homes_users", "users"
   add_foreign_key "lights", "devices"
 end
