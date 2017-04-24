@@ -48,7 +48,7 @@ class EnergiesController < ApplicationController
         registration_ids.push(u.fcm_token)
       end
       if registration_ids.any?
-        options = {code: "UPDATE_ENERGY"}
+        options = {data:{code: "UPDATE_ENERGY"}}
         response = fcm.send(registration_ids, options)
       end
       @status = 1
