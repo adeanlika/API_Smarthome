@@ -42,27 +42,26 @@ class EnergiesController < ApplicationController
     @home = Home.find_by(devid: params[:devid])
     @energy.home_id = @home.id
     if @energy.save
-        # @lowerenergy = Home.where('devid= ?', params[:devid]).select("lowerenergy").to_a
-        # @lowerenergy = @lowerenergy.map {|x| x.lowerenergy}
-        # @upperenergy = Home.where('devid = ?', params[:devid]).select("upperenergy").to_a
-        # @upperenergy = @upperenergy.map {|x| x.upperenergy}
-        # d = Date.today
-        # @energy = Energy.joins(:home).where('devid = ?', params[:devid]).select("total,energies.created_at").order('created_at ASC')
-        # @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
-        # @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
-        # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
-        # if @energy_by_month.to_s < @lowerte.to_s
-        #    @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too low')
-        #    @alert.save
-        #   else if params[:te].to_s > @upperte.to_s
-        #     @alert = AlertLog.new(sensor_name: 'temperature',device_id: params[:device_id],value: params[:te],status: 'Temperature too high')
-        #     @alert.save
-        #  end
-        # end
-      render json: 1, status: :created # location: @energy
+      @status = 1
+      d = Date.today
+      @energy_by_month = Energy.joins(:home).where('homes.id = ?', @home.id).select("total,energies.created_at").order('created_at ASC')
+      @energy_by_month = @energy_by_month.where(:created_at => d.beginning_of_month..Time.now)
+      @energy_by_month = @energy_by_month.group_by {|t| t.created_at.beginning_of_month}
+      @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+      key = @energy_by_month.first.keys.first
+      @energy_by_month = @energy_by_month.first[key]
+      @upperenergy = Home.where('homes.id = ?',  @home.id).select("upperenergy").to_a
+      @upperenergy = @upperenergy.map {|x| x.upperenergy}
+        if @energy_by_month > @upperenergy.first
+          @energy_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @energy_by_month,status: 'Energy too high')
+          if @energy_alert.save
+            @status = @status + 1
+          end
+        end
     else
-      render json: 0,status: :unprocessable_entity
+      @status = 0
     end
+    render json: @status
   end
 
   def daily

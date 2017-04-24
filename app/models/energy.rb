@@ -14,4 +14,5 @@
 #
 class Energy < ApplicationRecord
 	belongs_to :home
+
 	end

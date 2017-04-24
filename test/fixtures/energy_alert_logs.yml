@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  home_name: MyString
+  : 
+  value: MyString
+  : 
+  status: MyString
+  : MyString
+
+two:
+  home_name: MyString
+  : 
+  value: MyString
+  : 
+  status: MyString
+  : MyString

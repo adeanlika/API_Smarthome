@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :energy_alert_logs
   resources :lights
   resources :alert_logs
   resources :carbondioxides
@@ -6,7 +7,7 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
 
-post 'test', to: 'devices#test'
+get 'test', to: 'devices#test'
 get 'data_energy', to: 'energies#get_data_energy'
 #get 'current', to: 'homes#current'
   # post 'carbondioxides_daily', to: 'carbondioxides#daily'

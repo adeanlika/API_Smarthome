@@ -5,38 +5,38 @@
 #
  #movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
  #Character.create(name: 'Luke', movie: movies.first)
-100.times do |index|
-	10.times do |index2|
-	Humidity.create!(value: Faker::Number.normal(50,3.5),
-             device_id: 5,
-            created_at: index.days.ago)
-		end
-end
-p "Created #{Humidity.count} Humidities"
-
-100.times do |index|
- 	10.times do |index2|
-  	Temperature.create!(value: Faker::Number.normal(25,8),
-                  device_id: 5,
-    	            created_at: index.days.ago)
-			end
-end
-
-p "Created #{Temperature.count} Temperatures"
-
-50.times do |index|
- 	10.times do |index2|
-  	Carbondioxide.create!(value: Faker::Number.normal(70,15),
-                device_id: 5,
-   	            created_at: index.days.ago)
-			end
-end
-p "Created #{Carbondioxide.count} Carbondioxide"
+# 100.times do |index|
+# 	10.times do |index2|
+# 	Humidity.create!(value: Faker::Number.normal(50,3.5),
+#              device_id: 5,
+#             created_at: index.days.ago)
+# 		end
+# end
+# p "Created #{Humidity.count} Humidities"
+#
+# 100.times do |index|
+#  	10.times do |index2|
+#   	Temperature.create!(value: Faker::Number.normal(25,8),
+#                   device_id: 5,
+#     	            created_at: index.days.ago)
+# 			end
+# end
+#
+# p "Created #{Temperature.count} Temperatures"
+#
+# 50.times do |index|
+#  	10.times do |index2|
+#   	Carbondioxide.create!(value: Faker::Number.normal(70,15),
+#                 device_id: 5,
+#    	            created_at: index.days.ago)
+# 			end
+# end
+# p "Created #{Carbondioxide.count} Carbondioxide"
 
 100.times do |index|
  	2.times do |index2|
     Energy.create!(total: Faker::Number.normal(100,2),
-                home_id: 2,
+                home_id: 1,
    	            created_at: index.days.ago)
     			end
 end
