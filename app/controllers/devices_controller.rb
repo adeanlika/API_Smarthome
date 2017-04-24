@@ -142,5 +142,5 @@ class DevicesController < ApplicationController
       params.require(:home).permit(:name, :productID, :img, :home_id)
     end
 
-end
+
 end
