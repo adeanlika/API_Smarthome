@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-	before_action :set_motion, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 	def index
 	  @users = User.all
