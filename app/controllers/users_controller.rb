@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 		render json: @users
 	end
 	def update
-		# @users = User.find(params[:id])
+		@users = User.find(params[:id])
 		if @users.update(user_params)
 			render json: @users
 		else
