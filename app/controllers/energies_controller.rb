@@ -42,6 +42,15 @@ class EnergiesController < ApplicationController
     @home = Home.find_by(devid: params[:devid])
     @energy.home_id = @home.id
     if @energy.save
+      fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+      registration_ids = []
+      @home.users.each do |u|
+        registration_ids.push(u.fcm_token)
+      end
+      if registration_ids.any?
+        options = {code: "UPDATE_ENERGY"}
+        response = fcm.send(registration_ids, options)
+      end
       @status = 1
       d = Date.today
       @energy_by_month = Energy.joins(:home).where('homes.id = ?', @home.id).select("total,energies.created_at").order('created_at ASC')
