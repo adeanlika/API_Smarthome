@@ -22,8 +22,7 @@ class UsersController < ApplicationController
 		# Use callbacks to share common setup or constraints between actions.
 			# Only allow a trusted parameter "white list" through.
 		def user_params
-			params.permit(:provider, :uid, :name, :nickname, :image, :email)
+			params.permit(:provider, :uid, :name, :nickname, :image, :email, :fcm_token)
 		end
-
 
 end
