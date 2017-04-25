@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
 
-get 'test', to: 'devices#test'
+post 'test', to: 'devices#test'
 get 'data_energy', to: 'energies#get_data_energy'
 #get 'current', to: 'homes#current'
   # post 'carbondioxides_daily', to: 'carbondioxides#daily'

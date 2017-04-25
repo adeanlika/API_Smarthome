@@ -47,10 +47,16 @@ class HomesController < ApplicationController
     @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
     @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
     @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
-    # @current_energy = Home.joins(:energy).where("homes.id = ?", params[:home_id]).select("energies.energy, energies.created_at as date ").group_by_month('energies.created_at' , range: d.beginning_of_month..Time.now).sum("energy")
-    key = @energy_by_month.first.keys.first
-
-    render json: {date: key, value: @energy_by_month.first[key]}
+    @energy_by_month = @energy_by_month.map do |g|
+            k, v = g.first
+            { "date"=> k.to_s, "value"=>v }
+            end
+    # key = @energy_by_month.first.keys.first
+    @energy_by_month = @energy_by_month.reduce Hash.new, :merge
+    @temannya = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select(:cA,:pwr,:vA).last
+    @energy_by_month = @energy_by_month.reverse_merge(@temannya.as_json)
+    render json: @energy_by_month
+    # new[date: key, value: @energy_by_month.first[key]]
   end
 
 

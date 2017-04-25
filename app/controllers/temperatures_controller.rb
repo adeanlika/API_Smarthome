@@ -86,6 +86,6 @@ def daily
 
     # Only allow a trusted parameter "white list" through.
     def temperature_params
-      params.require(:temperature).permit(:value)
+      params.permit(:value)
     end
 end

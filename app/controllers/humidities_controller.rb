@@ -88,6 +88,6 @@ before_action :authenticate_user!
 
     # Only allow a trusted parameter "white list" through.
     def humidity_params
-      params.require(:humidity).permit(:value)
+      params.permit(:value)
     end
 end

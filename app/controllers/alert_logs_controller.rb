@@ -46,6 +46,6 @@ class AlertLogsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def alert_log_params
-      params.require(:alert_log).permit(:sensor_name, :value, :status)
+      params.permit(:sensor_name, :value, :status)
     end
 end

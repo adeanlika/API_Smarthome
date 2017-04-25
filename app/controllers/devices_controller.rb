@@ -51,11 +51,10 @@ class DevicesController < ApplicationController
   end
   def get_data_sensor
     @device = Device.find_by(productID: params[:productID])
-
       if params[:te].present?
         @temperature = Temperature.new(value: params[:te],device_id: @device.id)
         if @temperature.save
-          @status = 1
+        @status = 1
         @lowerte = Home.where('homes.id = ?', @device.home_id).select("lowertemp").to_a
         @lowerte = @lowerte.map {|x| x.lowertemp}
         @upperte = Home.where('homes.id = ?', @device.home_id).select("uppertemp").to_a
@@ -141,7 +140,7 @@ class DevicesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def device_params
-      params.require(:home).permit(:name, :productID, :img, :home_id)
+      params.permit(:name, :productID, :img, :home_id)
     end
 
 

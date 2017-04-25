@@ -85,6 +85,6 @@ class CarbondioxidesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def carbondioxide_params
-      params.require(:carbondioxide).permit(:value)
+      params.permit(:value)
     end
 end
