@@ -14,6 +14,7 @@ gem 'puma', '~> 3.0'
 gem 'groupdate'
 gem 'faker'
 gem 'fcm'
+gem 'carrierwave', '~> 1.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production

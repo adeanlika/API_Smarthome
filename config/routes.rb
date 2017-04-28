@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :relays
   resources :energy_alert_logs
   resources :lights
   resources :alert_logs
@@ -9,6 +10,7 @@ Rails.application.routes.draw do
 
 post 'test', to: 'devices#test'
 get 'data_energy', to: 'energies#get_data_energy'
+get 'data_sensor', to: 'devices#get_data_sensor'
 #get 'current', to: 'homes#current'
   # post 'carbondioxides_daily', to: 'carbondioxides#daily'
   # post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
@@ -19,7 +21,6 @@ get 'data_energy', to: 'energies#get_data_energy'
   resources :motions
   resources :humidities
   resources :temperatures
-  resources :relays
   resources :energies
 
   resources :homes_users
@@ -32,7 +33,7 @@ get 'data_energy', to: 'energies#get_data_energy'
 
     resources :devices do
         get 'current', to: 'homes#current'
-        get 'get_data_sensor', to: 'devices#get_data_sensor'
+
         post 'carbondioxides_daily', to: 'carbondioxides#daily'
         post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
         post 'carbondioxides_monthly', to: 'carbondioxides#monthly'

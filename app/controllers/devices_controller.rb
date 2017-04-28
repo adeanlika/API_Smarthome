@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices
   def index
     @devices = Device.all
@@ -51,10 +51,11 @@ class DevicesController < ApplicationController
   end
   def get_data_sensor
     @device = Device.find_by(productID: params[:productID])
+    @status = 0
       if params[:te].present?
         @temperature = Temperature.new(value: params[:te],device_id: @device.id)
         if @temperature.save
-        @status = 1
+        @status = @status + 1
         @lowerte = Home.where('homes.id = ?', @device.home_id).select("lowertemp").to_a
         @lowerte = @lowerte.map {|x| x.lowertemp}
         @upperte = Home.where('homes.id = ?', @device.home_id).select("uppertemp").to_a
@@ -66,7 +67,6 @@ class DevicesController < ApplicationController
             @alert = AlertLog.new(sensor_name: 'temperature',device_id: @device.id,value: params[:te],status: 'Temperature too high')
             @alert.save
           end
-
         end
       end
      end
@@ -87,7 +87,7 @@ class DevicesController < ApplicationController
           end
         end
       end
-      end
+    end
       if params[:co2].present?
         @carbondioxides = Carbondioxide.new(value: params[:co2],device_id: @device.id)
        if  @carbondioxides.save
@@ -99,7 +99,7 @@ class DevicesController < ApplicationController
          if params[:co2].to_i < @lowerco.first.to_i
            @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too low')
            @alert.save
-         else if params[:co].to_i > @upperco.first.to_i
+         else if params[:co2].to_i > @upperco.first.to_i
             @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too high')
             @alert.save
           end
@@ -127,8 +127,9 @@ class DevicesController < ApplicationController
       if params[:mot].present?
         @motions = Motion.new(value: params[:mot],device_id: @device.id)
         if @motions.save
-          @status = @status
+          @status = @status + 1
         end
+
       end
       render json: @status
     end
