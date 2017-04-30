@@ -1,8 +1,8 @@
 class CreateHomesUsers < ActiveRecord::Migration[5.0]
   def change
     create_table :homes_users do |t|
-      t.references :user, foreign_key: true
-      t.references :home, foreign_key: true
+      t.integer :home_id
+      t.integer :user_id
 
       t.timestamps
     end
