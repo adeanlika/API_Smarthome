@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170504021553) do
+ActiveRecord::Schema.define(version: 20170510051752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,11 +138,11 @@ ActiveRecord::Schema.define(version: 20170504021553) do
     t.string   "relay8name"
     t.string   "ac_brand"
     t.string   "ac_mode"
-    t.string   "ac_power"
+    t.integer  "ac_power"
     t.string   "ac_speed"
     t.string   "ac_swing"
     t.integer  "ac_enable"
-    t.string   "ac_temp"
+    t.integer  "ac_temp"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
