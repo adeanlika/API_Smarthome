@@ -19,7 +19,8 @@ class RelaysController < ApplicationController
 
 
     if @relay.save
-      render json: @relay#, status: :created, location: @relay else
+      render json: @relay, status: :created, location: @relay
+    else
       render json: @relay.errors, status: :unprocessable_entity
     end
   end
