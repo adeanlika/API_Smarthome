@@ -1,4 +1,4 @@
-class CreateRelays < ActiveRecord::Migration[5.0]
+class CreateRelaysNew < ActiveRecord::Migration[5.0]
   def change
     create_table :relays do |t|
         t.integer :relay1
