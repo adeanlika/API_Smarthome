@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!, except: [:get_data_sensor]
+  before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices
   def index
     @devices = Device.all

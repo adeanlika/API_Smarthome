@@ -1,6 +1,6 @@
 class RelaysController < ApplicationController
   before_action :set_relay, only: [:show, :update, :destroy]
-    # before_action :authenticate_user!
+    before_action :authenticate_user!
 
   # GET /relays
   def index

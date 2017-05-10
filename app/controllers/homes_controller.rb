@@ -1,6 +1,6 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /homes
   def index
     @homes = current_user.homes.find_by(:devid)

@@ -1,6 +1,6 @@
 class EnergiesController < ApplicationController
   before_action :set_energy, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!, except: [:get_data_energy]
+  before_action :authenticate_user!, except: [:get_data_energy]
   # GET /energies
   def index
     @energies = Energy.all
