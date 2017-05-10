@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :relays
+  
   resources :energy_alert_logs
   resources :lights
   resources :alert_logs
@@ -16,8 +16,6 @@ get 'data_sensor', to: 'devices#get_data_sensor'
   # post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
   # post 'carbondioxides_monthly', to: 'carbondioxides#monthly'
   # post 'carbondioxides_yearly', to: 'carbondioxides#yearly'
-
-
   resources :motions
   resources :humidities
   resources :temperatures
@@ -26,13 +24,17 @@ get 'data_sensor', to: 'devices#get_data_sensor'
   resources :homes_users
   resources :homes do
     get 'current_energy', to: 'homes#current_energy'
+    get 'cost', to: 'homes#cost'
+    get 'presentase', to: 'homes#presentase'
     post 'energy_daily', to: 'energies#daily'
     post 'energy_weekly', to: 'energies#weekly'
     post 'energy_monthly', to: 'energies#monthly'
     post 'energy_yearly', to: 'energies#yearly'
 
     resources :devices do
+      resources :relays
         get 'current', to: 'homes#current'
+        put 'aktuator', to: 'relays#actuator'
 
         post 'carbondioxides_daily', to: 'carbondioxides#daily'
         post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
@@ -55,7 +57,6 @@ get 'data_sensor', to: 'devices#get_data_sensor'
         post 'lights_yearly', to: 'lights#yearly'
       end
   end
-
-  resources :users
+ resources :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

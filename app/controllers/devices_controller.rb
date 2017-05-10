@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, except: [:get_data_sensor]
+  # before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices
   def index
     @devices = Device.all
@@ -47,10 +47,20 @@ class DevicesController < ApplicationController
   end
 
   def test
-
+    Time.zone = "Bangkok"
+    @start_date = params[:start_date].to_date.yesterday.beginning_of_day
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..Time.now).count(:total).take(7)
+    @count = @count.collect {|ind| ind[1]}
+    # @energy = Energy.all.select("date(created_at) as created_date").group("created_date")
+    # @start_date = params[:start_date]
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 7.day).group_by {|t| t.created_at.beginning_of_day}
+    # @energy_last =  @energy.collect { |t, d| { t => d.last[:total] } }
+    # @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
+    render json: @energy
   end
   def get_data_sensor
-    @device = Device.find_by(productID: params[:productID])
+    @device = Device.find_by(product_id: params[:product_id])
     @status = 0
       if params[:te].present?
         @temperature = Temperature.new(value: params[:te],device_id: @device.id)
@@ -130,8 +140,9 @@ class DevicesController < ApplicationController
           @status = @status + 1
         end
 
-      end
+
       render json: @status
+    end
     end
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -141,7 +152,7 @@ class DevicesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def device_params
-      params.permit(:name, :productID, :img, :home_id)
+      params.permit(:name, :product_id, :img, :home_id)
     end
 
 

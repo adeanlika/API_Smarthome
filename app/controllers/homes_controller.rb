@@ -59,6 +59,30 @@ class HomesController < ApplicationController
     # new[date: key, value: @energy_by_month.first[key]]
   end
 
+  def presentase
+    d = Date.today
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+    @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+    @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    @energy_by_month = @energy_by_month.first.values
+    @upperenergy = Home.where('homes.id = ?', params[:home_id]).select("upperenergy").map{ |h| h[:upperenergy]}.to_a
+    @presentase = (@energy_by_month.first / @upperenergy.first)*100
+    render json: @presentase
+  end
+
+  def cost
+    d = Date.today
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+    @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+    @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    @energy_by_month = @energy_by_month.first.values
+    @biaya = 1467
+    @cost = @energy_by_month.first * @biaya
+    render json: @cost
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -68,7 +92,7 @@ class HomesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def home_params
-      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy)
+      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy, :gateway_id)
     end
     def get_energy_params
       params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tcA, :rpA, :pfA)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427043634) do
+ActiveRecord::Schema.define(version: 20170504021553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20170427043634) do
 
   create_table "devices", force: :cascade do |t|
     t.string   "name"
-    t.string   "productID"
+    t.string   "product_id"
     t.binary   "img"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 20170427043634) do
     t.float    "upperflux"
     t.float    "upperenergy"
     t.string   "devid"
+    t.string   "gateway_id"
   end
 
   create_table "homes_users", force: :cascade do |t|
@@ -137,13 +138,15 @@ ActiveRecord::Schema.define(version: 20170427043634) do
     t.string   "relay8name"
     t.string   "ac_brand"
     t.string   "ac_mode"
-    t.integer  "ac_power"
+    t.string   "ac_power"
     t.string   "ac_speed"
     t.string   "ac_swing"
     t.integer  "ac_enable"
-    t.integer  "ac_temp"
+    t.string   "ac_temp"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "device_id"
+    t.index ["device_id"], name: "index_relays_on_device_id", using: :btree
   end
 
   create_table "temperatures", force: :cascade do |t|
@@ -191,4 +194,5 @@ ActiveRecord::Schema.define(version: 20170427043634) do
   add_foreign_key "energy_alert_logs", "homes"
   add_foreign_key "homes_users", "users"
   add_foreign_key "lights", "devices"
+  add_foreign_key "relays", "devices"
 end
