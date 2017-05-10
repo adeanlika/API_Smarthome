@@ -15,12 +15,11 @@ class RelaysController < ApplicationController
 
   # POST /relays
   def create
-    @relay = Relay.new(relay_params)
+    @relay = Relay.new(aktuator_params)
 
 
     if @relay.save
-      render json: @relay, status: :created, location: @relay
-    else
+      render json: @relay#, status: :created, location: @relay else
       render json: @relay.errors, status: :unprocessable_entity
     end
   end
