@@ -62,20 +62,26 @@ class EnergiesController < ApplicationController
       @upperenergy = Home.where('homes.id = ?',  @home.id).select("upperenergy").to_a
       @upperenergy = @upperenergy.map {|x| x.upperenergy}
         if @energy_by_month > @upperenergy.first
-          @energy_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @energy_by_month,status: 'Energy too high')
-          if @energy_alert.save
-            fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
-            registration_ids = []
-            @home.users.each do |u|
-              registration_ids.push(u.fcm_token)
-            end
-            if registration_ids.any?
-              options = {data:{code: "ALERT"}, notification: {body: "Energy too high", title: "Energy Warning"  }}
+          if @home.upperenergy_flag == false
+            @energy_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @energy_by_month,status: 'Energy too high')
+            if @energy_alert.save
+              fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+              registration_ids = []
+              @home.users.each do |u|
+                registration_ids.push(u.fcm_token)
+              end
+              if registration_ids.any?
+                options = {data:{code: "ALERT"}, notification: {body: "Energy too high", title: "Energy Warning"  }}
 
-              response = fcm.send(registration_ids, options)
+                response = fcm.send(registration_ids, options)
+              end
+              @status = @status + 1
+              @home.upperenergy_flag = true;
+              @home.save;
             end
-            @status = @status + 1
           end
+        else
+          @home.upperenergy_flag = false
         end
     else
       @status = 0

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510051752) do
+ActiveRecord::Schema.define(version: 20170512015549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(version: 20170510051752) do
 
   create_table "homes", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.float    "lowertemp"
     t.float    "uppertemp"
     t.float    "lowerhum"
@@ -84,6 +84,15 @@ ActiveRecord::Schema.define(version: 20170510051752) do
     t.float    "upperenergy"
     t.string   "devid"
     t.string   "gateway_id"
+    t.boolean  "lowertemp_flag"
+    t.boolean  "uppertemp_flag"
+    t.boolean  "lowerhum_flag"
+    t.boolean  "upperhum_flag"
+    t.boolean  "lowerco_flag"
+    t.boolean  "upperco_flag"
+    t.boolean  "upperenergy_flag"
+    t.boolean  "lowerflux_flag"
+    t.boolean  "upperflux_flag"
   end
 
   create_table "homes_users", force: :cascade do |t|
