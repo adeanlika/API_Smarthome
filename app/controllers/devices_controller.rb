@@ -58,7 +58,7 @@ class DevicesController < ApplicationController
     @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
     @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
     @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
-    @mop = []
+    @daily_bar = []
     counter = 0
     first = 0
     last = 0
@@ -76,16 +76,16 @@ class DevicesController < ApplicationController
        @count.each_index do |index|
         if @count[index] != 0
           if first == index
-             @mop << @energy_last[0] - @energy_first[0]
+             @daily_bar << @energy_last[0] - @energy_first[0]
           else
-            @mop << @energy_last[counter + 1] - @energy_last[counter]
+            @daily_bar << @energy_last[counter + 1] - @energy_last[counter]
             counter = counter + 1
         end
       elsif @count[index] == 0
-         @mop << @count[index]
+         @daily_bar << @count[index]
        end
        end
-    render json: @mop
+    render json: @daily_bar
   end
 
 
