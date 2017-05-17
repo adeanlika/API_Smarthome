@@ -85,7 +85,7 @@ class DevicesController < ApplicationController
          @daily_bar << @count[index]
        end
        end
-    render json: @daily_bar
+    render json: @mop
   end
 
 

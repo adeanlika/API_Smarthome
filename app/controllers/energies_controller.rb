@@ -90,54 +90,177 @@ class EnergiesController < ApplicationController
   end
 
   def daily
+    # koding versi baruww
+    Time.zone = "Bangkok"
+    @start_date = params[:start_date].to_date.beginning_of_day
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 5.day+23.hour+59.minute).count(:total)
+    @count = @count.collect {|ind| ind[1]}
+
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 5.day+23.hour+59.minute).group_by {|t| t.created_at.beginning_of_day}
+
+    @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+    @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
+    @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
+    @daily_bar = []
+    counter = 0
+    first = 0
+    last = 0
+    empty = true
+    @count.each_index do |i|
+      if empty == true
+        first = i
+      end
+      if @count[i] != 0
+        last = i
+        empty = false
+      end
+    end
+
+   @count.each_index do |index|
+     if @count[index] != 0
+       if first == index
+          @daily_bar << @energy_last[0] - @energy_first[0]
+       else
+          @daily_bar << @energy_last[counter + 1] - @energy_last[counter]
+          counter = counter + 1
+      end
+     elsif @count[index] == 0
+       @daily_bar << @count[index]
+     end
+  end
+
+  #koding energi per hari old vversion tapi jalan kok
+  # @start_date = params[:start_date].to_date.beginning_of_day
+  # @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+  # @energy = @energy.where(:created_at => @start_date..Time.now)
+  # @energy_by_day = @energy.group_by {|t| t.created_at.beginning_of_day}
+  # @energy_by_day =  @energy_by_day.collect { |day, total| { day => total.last[:total] - total.first[:total] } }.take(6)
+  # @energy_by_day = @energy_by_day.map do |g|
+  #         k, v = g.first
+  #         { "date"=> k.to_s, "value"=>v }
+  #         end
   #@energy = Energy.select("id,created_at").where(:created_at => (params[:start_date].to_date.beginning_of_day)..Time.now)
   #@energy = Energy.select("date_trunc( 'day', created_at ) as day, sum(energy_delta) as total_energy").group('day').take(6).order(created_at: :desc)
-  @start_date = params[:start_date].to_date.beginning_of_day
-  @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-  @energy = @energy.where(:created_at => @start_date..Time.now)
-  @energy_by_day = @energy.group_by {|t| t.created_at.beginning_of_day}
-  @energy_by_day =  @energy_by_day.collect { |day, total| { day => total.last[:total] - total.first[:total] } }.take(6)
-  @energy_by_day = @energy_by_day.map do |g|
-          k, v = g.first
-          { "date"=> k.to_s, "value"=>v }
-          end
   #  @energy = @energy.group_by { |t| t.created_at.beginning_of_month }
-    #  @start_date = params[:start_date].to_date.beginning_of_day
-    #   @energy = Energy.all.group_by_day(:created_at, range: @start_date..Time.now).take(6)
-    # # orders = Energy.group("date(created_at)")
-    # orders = Energy.select("date(created_at), sum(power) as total_amount")
-    # orders =  orders.group_by { |order| order.created_at.to_date }
-#  @start_date = params[:start_date].to_date.beginning_of_day
+  #  @start_date = params[:start_date].to_date.beginning_of_day
+  #   @energy = Energy.all.group_by_day(:created_at, range: @start_date..Time.now).take(6)
+  # orders = Energy.group("date(created_at)")
+  # orders = Energy.select("date(created_at), sum(power) as total_amount")
+  # orders =  orders.group_by { |order| order.created_at.to_date }
+  #  @start_date = params[:start_date].to_date.beginning_of_day
 
-#  @energy = Energy.group_by_day(:created_at, range: @start_date..Time.now).take(6)
-#@energy = @energy.to_a
-#keys = [:date, :total_energy]
-#@energy = @energy.first - @energy.last
-#   @energy = @energy.each.map {|value| Hash[keys.zip(value)]}
-render json: @energy_by_day
+  #  @energy = Energy.group_by_day(:created_at, range: @start_date..Time.now).take(6)
+  #@energy = @energy.to_a
+  #keys = [:date, :total_energy]
+  #@energy = @energy.first - @energy.last
+  #   @energy = @energy.each.map {|value| Hash[keys.zip(value)]}
+  render json: @daily_bar
   end
 
   def weekly
-    @start_date = params[:start_date].to_date.beginning_of_day
+    Time.zone = "Bangkok"
+    @start_date = params[:start_date].to_date.beginning_of_week
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_week('energies.created_at', range: @start_date..@start_date + 4.week+6.day+23.hour+59.minute).count(:total)
+    @count = @count.collect {|ind| ind[1]}
+
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where(:created_at => @start_date..Time.now)
-    @energy_by_week = @energy.group_by {|t| t.created_at.beginning_of_week}
-    @energy_by_week =  @energy_by_week.collect { |week, total| { week => total.last[:total] - total.first[:total] } }.take(6)
-    @energy_by_week = @energy_by_week.map do |g|
-            k, v = g.first
-            { "date"=> k.to_s, "value"=>v }
-            end
-    render json: @energy_by_week
+    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 4.week+6.day+23.hour+59.minute).group_by {|t| t.created_at.beginning_of_week}
+
+  #   @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+  #   @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
+  #   @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
+  #   @weekly_bar = []
+  #   counter = 0
+  #   first = 0
+  #   last = 0
+  #   empty = true
+  #   @count.each_index do |i|
+  #     if empty == true
+  #       first = i
+  #     end
+  #     if @count[i] != 0
+  #       last = i
+  #       empty = false
+  #     end
+  #   end
+  #
+  #  @count.each_index do |index|
+  #    if @count[index] != 0
+  #      if first == index
+  #         @weekly_bar << @energy_last[0] - @energy_first[0]
+  #      else
+  #         @weekly_bar << @energy_last[counter + 1] - @energy_last[counter]
+  #         counter = counter + 1
+  #     end
+  #    elsif @count[index] == 0
+  #      @weekly_bar << @count[index]
+  #    end
+  # end
+    #kodingan old but gold
+    # @start_date = params[:start_date].to_date.beginning_of_day
+    # @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    # @energy = @energy.where(:created_at => @start_date..Time.now)
+    # @energy_by_week = @energy.group_by {|t| t.created_at.beginning_of_week}
+    # @energy_by_week =  @energy_by_week.collect { |week, total| { week => total.last[:total] - total.first[:total] } }.take(6)
+    # @energy_by_week = @energy_by_week.map do |g|
+    #         k, v = g.first
+    #         { "date"=> k.to_s, "value"=>v }
+    #         end
+    render json: @weekly_bar
   end
 
 
   def monthly
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where(:created_at => @start_date..Time.now)
-    @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
-    @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }.take(6)
+    Time.zone = "Bangkok"
+    @start_date = params[:start_date].to_date.beginning_of_month
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_month('energies.created_at', range: @start_date..@start_date + 5.month+29.day+23.hour+59.minute).count(:total)
+    @count = @count.collect {|ind| ind[1]}
 
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 5.month+29.day+23.hour+59.minute).group_by {|t| t.created_at.beginning_of_month}
+
+    @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+    @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
+    @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
+    @monthly_bar = []
+    counter = 0
+    first = 0
+    last = 0
+    empty = true
+    @count.each_index do |i|
+      if empty == true
+        first = i
+      end
+      if @count[i] != 0
+        last = i
+        empty = false
+      end
+    end
+
+   @count.each_index do |index|
+     if @count[index] != 0
+       if first == index
+          @monthly_bar << @energy_last[0] - @energy_first[0]
+       else
+          @monthly_bar << @energy_last[counter + 1] - @energy_last[counter]
+          counter = counter + 1
+      end
+     elsif @count[index] == 0
+       @monthly_bar << @count[index]
+     end
+  end
+
+    # kodingan energy by month old version dengan hasil bener tapi proses bisnis salah
+    # @start_date = params[:start_date].to_date.beginning_of_day
+    # @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    # @energy = @energy.where(:created_at => @start_date..Time.now)
+    # @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
+    # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }.take(6)
+    # @energy_by_month = @energy_by_month.map do |g|
+    #         k, v = g.first
+    #         { "date"=> k.to_s, "value"=>v }
+    #         end
 
     #  @energy_by_month = @energy_by_month.to_a
     # @start_date = params[:start_date].to_date.beginning_of_day
@@ -151,18 +274,10 @@ render json: @energy_by_day
     # keys = [:date, :total]
     # @energy = @energy.each.map {|energy_delta| Hash[keys.zip(energy_delta)]}
     # @energy = @energy_by_mon.each.map {|g,v| Hash[g[:dates], [g[:total]]]}
-    @energy_by_month = @energy_by_month.map do |g|
-            k, v = g.first
-            { "date"=> k.to_s, "value"=>v }
-            end#.map {|h| Hash[%w(date value).zip(h.keys + h.values)]}
 
-    render json: @energy_by_month
-
+            #.map {|h| Hash[%w(date value).zip(h.keys + h.values)]}
 
     #  render json: @energy_by_month
-
-
-
 
   # @energy = Energy.select("id,created_at").where(:created_at => (params[:start_date].to_date.beginning_of_day)..Time.now)
   # @energy = Energy.select("date_trunc( 'month', created_at ) as month, sum(energy_delta) as total_energy").group('month').take(6)
@@ -175,29 +290,68 @@ render json: @energy_by_day
   # @energy = @energy.each.map {|energy_delta| Hash[keys.zip(energy_delta)]}
   #
   #   render json:  @energy
+    render json: @monthly_bar
   end
 
   def yearly
+    Time.zone = "Bangkok"
+    @start_date = params[:start_date].to_date.beginning_of_year
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_year('energies.created_at', range: @start_date..@start_date + 5.year+11.month+29.day+23.hour+59.minute).count(:total)
+    @count = @count.collect {|ind| ind[1]}
+
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 5.year+11.month+29.day+23.hour+59.minute).group_by {|t| t.created_at.beginning_of_year}
+
+    @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+    @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
+    @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
+    @yearly_bar = []
+    counter = 0
+    first = 0
+    last = 0
+    empty = true
+    @count.each_index do |i|
+      if empty == true
+        first = i
+      end
+      if @count[i] != 0
+        last = i
+        empty = false
+      end
+    end
+
+   @count.each_index do |index|
+     if @count[index] != 0
+       if first == index
+          @yearly_bar << @energy_last[0] - @energy_first[0]
+       else
+          @yearly_bar << @energy_last[counter + 1] - @energy_last[counter]
+          counter = counter + 1
+      end
+     elsif @count[index] == 0
+       @yearly_bar << @count[index]
+     end
+  end
 
   # @energy = Energy.select("id,created_at").where(:created_at => (params[:start_date].to_date.beginning_of_day)..Time.now)
   # @energy = Energy.select("date_trunc( 'year', created_at ) as year, sum(energy_delta) as total_energy").group('year').take(6)
   # render json: @energy
   #  @energy = Energy.group_by{|energy_delta| energy.created_at.day}
 
-
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where(:created_at => @start_date..Time.now)
-    @energy_by_year = @energy.group_by {|t| t.created_at.beginning_of_year}
-    @energy_by_year =  @energy_by_year.collect { |year, total| { year => total.last[:total] - total.first[:total] } }.take(6)
-    @energy_by_year = @energy_by_year.map do |g|
-            k, v = g.first
-            { "date"=> k.to_s, "value"=>v }
-            end
+    #koding old but gold
+    # @start_date = params[:start_date].to_date.beginning_of_day
+    # @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    # @energy = @energy.where(:created_at => @start_date..Time.now)
+    # @energy_by_year = @energy.group_by {|t| t.created_at.beginning_of_year}
+    # @energy_by_year =  @energy_by_year.collect { |year, total| { year => total.last[:total] - total.first[:total] } }.take(6)
+    # @energy_by_year = @energy_by_year.map do |g|
+    #         k, v = g.first
+    #         { "date"=> k.to_s, "value"=>v }
+    #         end
     # @energy = @energy.to_a
     # keys = [:date, :total]
     # @energy = @energy.each.map {|energy_delta| Hash[keys.zip(energy_delta)]}
-    render json: @energy_by_year
+    render json: @yearly_bar
   end
 
   private

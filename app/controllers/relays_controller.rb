@@ -1,6 +1,6 @@
 class RelaysController < ApplicationController
   before_action :set_relay, only: [:show, :update, :destroy]
-    before_action :authenticate_user!
+#    before_action :authenticate_user!
 
   # GET /relays
   def index
@@ -35,7 +35,7 @@ class RelaysController < ApplicationController
       puts "#{@gateway_id}"
       @product_id = @joins.select("devices.product_id").map{ |h| h[:product_id]}.to_sentence
       puts "#{@product_id}"
-      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_speed, :ac_mode, :ac_swing, :ac_temp, :ac_power).join("")
+      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_state, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing).join("")
       puts "#{@data}"
       # Server that the input is in XML format.
       #     req.Server that the input is in XML format.
@@ -79,7 +79,7 @@ class RelaysController < ApplicationController
             res.error!
           end
 
-      render json: @data
+      render json: req.body
     else
       render json: @relay.errors, status: :unprocessable_entity
     end
@@ -149,6 +149,6 @@ class RelaysController < ApplicationController
       params.fetch(:relay, {})
     end
     def aktuator_params
-      params.permit(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_speed, :ac_mode, :ac_swing, :ac_temp, :ac_power, :device_id)
+      params.permit(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_state, :ac_power, :ac_mode, :ac_temp, :ac_speed, :ac_swing, :ac_brand, :device_id)
     end
 end
