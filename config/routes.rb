@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   resources :energy_alert_logs
   resources :lights
-  resources :alert_logs
+
   resources :carbondioxides
   mount_devise_token_auth_for 'User', at: 'auth'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
@@ -32,6 +32,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
     post 'energy_yearly', to: 'energies#yearly'
 
     resources :devices do
+
         get 'current_sensor', to: 'homes#current'
         post 'carbondioxides_daily', to: 'carbondioxides#daily'
         post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
@@ -52,6 +53,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
         post 'lights_weekly', to: 'lights#weekly'
         post 'lights_monthly', to: 'lights#monthly'
         post 'lights_yearly', to: 'lights#yearly'
+      resources :alert_logs
       resources :relays
         put 'aktuator', to: 'relays#actuator'
 

@@ -1,9 +1,9 @@
 class AlertLogsController < ApplicationController
   before_action :set_alert_log, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   # GET /alert_logs
   def index
-    @alert_logs = AlertLog.all
+    @alert_logs = Device.find(params[:device_id]).alert_logs
 
     render json: @alert_logs
   end
