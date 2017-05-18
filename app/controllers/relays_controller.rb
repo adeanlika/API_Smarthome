@@ -1,6 +1,6 @@
 class RelaysController < ApplicationController
   before_action :set_relay, only: [:show, :update, :destroy]
-#    before_action :authenticate_user!
+before_action :authenticate_user!
 
   # GET /relays
   def index
@@ -79,7 +79,7 @@ class RelaysController < ApplicationController
             res.error!
           end
 
-      render json: req.body
+      render json: @data.to_s
     else
       render json: @relay.errors, status: :unprocessable_entity
     end

@@ -92,18 +92,18 @@ class EnergiesController < ApplicationController
   def daily
     # koding versi baruww
     Time.zone = "Bangkok"
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 5.day+23.hour+59.minute).count(:total)
+    @start_date = params[:start_date].to_date.beginning_of_month
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date +1.month + 23.hour+59.minute).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 5.day+23.hour+59.minute).group_by {|t| t.created_at.beginning_of_day}
+    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 1.month + 23.hour+59.minute).group_by {|t| t.created_at.beginning_of_day}
 
     @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
     @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
     @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
     @daily_bar = []
-    counter = 0
+    @counter = 0
     first = 0
     last = 0
     empty = true
@@ -112,7 +112,7 @@ class EnergiesController < ApplicationController
         first = i
       end
       if @count[i] != 0
-        last = i
+        @counter = @counter+1
         empty = false
       end
     end
@@ -122,8 +122,9 @@ class EnergiesController < ApplicationController
        if first == index
           @daily_bar << @energy_last[0] - @energy_first[0]
        else
-          @daily_bar << @energy_last[counter + 1] - @energy_last[counter]
-          counter = counter + 1
+        # @daily_bar << 1
+          @daily_bar << @energy_last[@counter - 2] - @energy_last[@counter - 3]
+          @counter = @counter - 1
       end
      elsif @count[index] == 0
        @daily_bar << @count[index]

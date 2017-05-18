@@ -79,7 +79,7 @@ class HomesController < ApplicationController
     @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
     @energy_by_month = @energy_by_month.first.values
     @biaya = 1467
-    @cost = @energy_by_month.first * @biaya
+    @cost = (@energy_by_month.first * @biaya)/1000
     render json: @cost
   end
 
