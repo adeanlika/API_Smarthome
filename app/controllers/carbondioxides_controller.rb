@@ -39,7 +39,7 @@ class CarbondioxidesController < ApplicationController
   end
   def daily
     @start_date = params[:start_date].to_date.beginning_of_day
-    @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day(:created_at, range: @start_date..Time.now).average(:value).take(6)
+    @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('carbondioxides.created_at', range: @start_date..Time.now).average(:value).take(6)
    #@Carbondioxide = Carbondioxide.all.group(:created_at).order(:created_at).average(:value)
    @Carbondioxide = @Carbondioxide.to_a
    keys = [:date, :value]
@@ -50,7 +50,7 @@ class CarbondioxidesController < ApplicationController
 
   def weekly
   @start_date = params[:start_date].to_date.beginning_of_day
-  @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week(:created_at, range: @start_date..Time.now).average(:value).take(6)
+  @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('carbondioxides.created_at', range: @start_date..Time.now).average(:value).take(6)
   @Carbondioxide = @Carbondioxide.to_a
   keys = [:date, :value]
   @Carbondioxide = @Carbondioxide.each.map {|value| Hash[keys.zip(value)]}
@@ -60,7 +60,7 @@ class CarbondioxidesController < ApplicationController
 
   def monthly
    @start_date = params[:start_date].to_date.beginning_of_day
-   @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month(:created_at, range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
+   @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('carbondioxides.created_at', range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
    @Carbondioxide = @Carbondioxide.to_a
    keys = [:date, :value]
    @Carbondioxide = @Carbondioxide.each.map {|value| Hash[keys.zip(value)]}
@@ -70,7 +70,7 @@ class CarbondioxidesController < ApplicationController
 
   def yearly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year(:created_at, range: @start_date..Time.now, format: "%Y").average(:value).take(6)
+    @Carbondioxide = Carbondioxide.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('carbondioxides.created_at', range: @start_date..Time.now, format: "%Y").average(:value).take(6)
     @Carbondioxide = @Carbondioxide.to_a
     keys = [:date, :value]
     @Carbondioxide = @Carbondioxide.each.map {|value| Hash[keys.zip(value)]}

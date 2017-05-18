@@ -44,9 +44,9 @@ ActiveRecord::Schema.define(version: 20170516105115) do
   end
 
   create_table "energies", force: :cascade do |t|
-    t.float    "pwr"
+
     t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.float    "pwr"
     t.float    "total"
     t.float    "energy_delta"
     t.float    "pfA"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20170516105115) do
     t.float    "vA"
     t.float    "rpA"
     t.string   "devid"
+    t.datetime "updated_at",   null: false
     t.integer  "home_id"
     t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
   end
@@ -70,9 +71,9 @@ ActiveRecord::Schema.define(version: 20170516105115) do
   end
 
   create_table "homes", force: :cascade do |t|
-    t.string   "name"
+
     t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.string   "name"
     t.float    "lowertemp"
     t.float    "uppertemp"
     t.float    "lowerhum"
@@ -93,6 +94,7 @@ ActiveRecord::Schema.define(version: 20170516105115) do
     t.boolean  "upperenergy_flag"
     t.boolean  "lowerflux_flag"
     t.boolean  "upperflux_flag"
+    t.datetime "updated_at",       null: false
   end
 
   create_table "homes_users", force: :cascade do |t|
@@ -145,17 +147,18 @@ ActiveRecord::Schema.define(version: 20170516105115) do
     t.string   "relay6name"
     t.string   "relay7name"
     t.string   "relay8name"
-    t.string   "ac_brand"
-    t.string   "ac_mode"
+    t.string   "ac_enable"
     t.string   "ac_power"
+    t.string   "ac_mode"
+    t.string   "ac_temp"
     t.string   "ac_speed"
     t.string   "ac_swing"
-    t.string   "ac_enable"
-    t.string   "ac_temp"
+    t.string   "ac_brand"
+    t.string   "ac_state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "device_id"
-    t.string   "ac_state"
+
     t.index ["device_id"], name: "index_relays_on_device_id", using: :btree
   end
 
