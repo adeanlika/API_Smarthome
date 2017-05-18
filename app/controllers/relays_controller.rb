@@ -35,7 +35,7 @@ before_action :authenticate_user!
       puts "#{@gateway_id}"
       @product_id = @joins.select("devices.product_id").map{ |h| h[:product_id]}.to_sentence
       puts "#{@product_id}"
-      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_state, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing).join("")
+      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing).join("")
       puts "#{@data}"
       # Server that the input is in XML format.
       #     req.Server that the input is in XML format.
@@ -57,7 +57,7 @@ before_action :authenticate_user!
           </targets>
           <rci_request version="1.1">
         <do_command target="xig">
-        <send_data hw_address="'+@product_id+'">"'+@data+'"</send_data>
+        <send_data hw_address="'+@product_id+'">'+@data+'</send_data>
         </do_command>
         </rci_request>
         </send_message>
@@ -79,7 +79,7 @@ before_action :authenticate_user!
             res.error!
           end
 
-      render json: @data.to_s
+      render json: req.body
     else
       render json: @relay.errors, status: :unprocessable_entity
     end
@@ -149,6 +149,6 @@ before_action :authenticate_user!
       params.fetch(:relay, {})
     end
     def aktuator_params
-      params.permit(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_state, :ac_power, :ac_mode, :ac_temp, :ac_speed, :ac_swing, :ac_brand, :device_id)
+      params.permit(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed, :ac_swing, :ac_brand, :device_id)
     end
 end
