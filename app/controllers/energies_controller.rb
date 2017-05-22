@@ -365,6 +365,43 @@ class EnergiesController < ApplicationController
     render json: @yearly_bar
   end
 
+  def current_hourly
+    @start_date = params[:start_date].to_date.beginning_of_day
+    @current = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date..@start_date + 23.hour + 59.minute).average(:cA)
+    @current = @current.to_a
+    keys = [:date, :value]
+    @current= @current.each.map {|value| Hash[keys.zip(value)]}
+    #@Humidity.shift
+    render json: @current
+  end
+  def current_daily
+    @start_date = params[:start_date].to_date.beginning_of_month
+    @current = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:cA)
+    @current = @current.to_a
+    keys = [:date, :value]
+    @current= @current.each.map {|value| Hash[keys.zip(value)]}
+    #@Humidity.shift
+    render json: @current
+  end
+
+  def voltage_hourly
+    @start_date = params[:start_date].to_date.beginning_of_day
+    @volt= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date..@start_date + 23.hour + 59.minute).average(:vA)
+    @volt = @volt.to_a
+    keys = [:date, :value]
+    @volt= @volt.each.map {|value| Hash[keys.zip(value)]}
+    #@Humidity.shift
+    render json: @volt
+  end
+  def voltage_daily
+    @start_date = params[:start_date].to_date.beginning_of_month
+    @volt = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:cA)
+    @volt = @volt.to_a
+    keys = [:date, :value]
+    @volt = @volt.each.map {|value| Hash[keys.zip(value)]}
+    #@Humidity.shift
+    render json: @volt
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_energy

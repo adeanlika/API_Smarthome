@@ -186,22 +186,22 @@ class DevicesController < ApplicationController
         end
       end
 
-      if params[:flux].present?
-         @light = Light.new(value: params[:flux],device_id: @device.id)
+      if params[:light].present?
+         @light = Light.new(value: params[:light],device_id: @device.id)
          if @light.save
             @status = @status + 1
             @lowerflux= Home.where('homes.id = ?', @device.home_id).select("lowerflux").to_a
             @lowerflux = @lowerflux.map {|x| x.lowerflux}
             @upperflux= Home.where('homes.id = ?', @device.home_id).select("upperflux").to_a
             @upperflux = @upperflux.map {|x| x.upperflux}
-            if params[:flux].to_i < @lowerflux.first.to_i
+            if params[:light].to_i < @lowerflux.first.to_i
               if @home.lowerflux_flag == false
                  @alert = AlertLog.new(sensor_name: 'Light',device_id: @device.id,value: params[:co],status: 'Flux too low')
                  @alert.save
                  @home.lowerflux_flag = true
                  @home.save
               end
-            elsif params[:flux].to_i > @upperflux.first.to_i
+            elsif params[:light].to_i > @upperflux.first.to_i
                if @home.upperflux_flag == false
                  @alert = AlertLog.new(sensor_name: 'Light',device_id: @device.id,value: params[:co],status: 'Flux too high')
                  @alert.save

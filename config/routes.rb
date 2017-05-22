@@ -30,7 +30,10 @@ get 'data_sensor', to: 'devices#get_data_sensor'
     post 'energy_weekly', to: 'energies#weekly'
     post 'energy_monthly', to: 'energies#monthly'
     post 'energy_yearly', to: 'energies#yearly'
-
+    post 'current_hourly', to: 'energies#current_hourly'
+    post 'current_daily', to: 'energies#current_daily'
+    post 'voltage_hourly', to: 'energies#voltage_hourly'
+    post 'voltage_daily', to: 'energies#voltage_daily'
     resources :devices do
 
         get 'current_sensor', to: 'homes#current'
