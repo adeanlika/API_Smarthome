@@ -8,7 +8,7 @@
 100.times do |index|
 	5.times do |index2|
 	Humidity.create!(value: Faker::Number.normal(100,3.5),
-             device_id: 1,
+             device_id: 5,
             created_at: index.days.ago)
 		end
 end
