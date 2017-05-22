@@ -40,8 +40,8 @@ before_action :authenticate_user!
 
 
   def daily
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('humidities.created_at', range: @start_date..Time.now).average(:value).take(6)
+    @start_date = params[:start_date].to_date.beginning_of_month
+    @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('humidities.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:value)
    #@Humidity = Humidity.all.group(:created_at).order(:created_at).average(:value)
    @Humidity = @Humidity.to_a
    keys = [:date, :value]
@@ -51,8 +51,8 @@ before_action :authenticate_user!
   end
 
   def weekly
-  @start_date = params[:start_date].to_date.beginning_of_day
-  @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('humidities.created_at', range: @start_date..Time.now).average(:value).take(6)
+  @start_date = params[:start_date].to_date.beginning_of_week
+  @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('humidities.created_at', range: @start_date - 6.week..@start_date + 6.week).average(:value)
   @Humidity = @Humidity.to_a
   keys = [:date, :value]
   @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}
@@ -61,8 +61,8 @@ before_action :authenticate_user!
   end
 
   def monthly
-   @start_date = params[:start_date].to_date.beginning_of_day
-   @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('humidities.created_at', range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
+   @start_date = params[:start_date].to_date.beginning_of_year
+   @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('humidities.created_at', range: @start_date..@start_date + 1.year - 1.day, format: "%b %Y").average(:value)
    @Humidity = @Humidity.to_a
    keys = [:date, :value]
    @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}
@@ -71,8 +71,8 @@ before_action :authenticate_user!
   end
 
   def yearly
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('humidities.created_at', range: @start_date..Time.now, format: "%Y").average(:value).take(6)
+    @start_date = params[:start_date].to_date.beginning_of_year
+    @Humidity = Humidity.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('humidities.created_at', range: @start_date - 6.year..@start_date + 6.year, format: "%Y").average(:value)
     @Humidity = @Humidity.to_a
     keys = [:date, :value]
     @Humidity = @Humidity.each.map {|value| Hash[keys.zip(value)]}

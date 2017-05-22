@@ -38,8 +38,8 @@ class LightsController < ApplicationController
     @light.destroy
   end
   def daily
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @Light= Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('lights.created_at', range: @start_date..Time.now).average(:value).take(6)
+    @start_date = params[:start_date].to_date.beginning_of_month
+    @Light= Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('lights.created_at', range:@start_date..@start_date + 1.month - 1.day).average(:value)
    #@Humidity = Humidity.all.group(:created_at).order(:created_at).average(:value)
    @Light = @Light.to_a
    keys = [:date, :value]
@@ -49,9 +49,8 @@ class LightsController < ApplicationController
   end
 
   def weekly
-  @start_date = params[:start_date].to_date.beginning_of_day
-  @Light = Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('lights.created_at', range: @start_date..Time.now).average(:value).take(6)
-  @Light = @Light.to_a
+  @start_date = params[:start_date].to_date.beginning_of_week
+  @Light = Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('lights.created_at', range: @start_date - 6.week..@start_date + 6.week).average(:value)
   keys = [:date, :value]
   @Light = @Light.each.map {|value| Hash[keys.zip(value)]}
   #@Humidity.shift
@@ -59,8 +58,8 @@ class LightsController < ApplicationController
   end
 
   def monthly
-   @start_date = params[:start_date].to_date.beginning_of_day
-   @Light = Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('lights.created_at', range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
+   @start_date = params[:start_date].to_date.beginning_of_year
+   @Light = Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('lights.created_at', range: @start_date..@start_date +1.year - 1.day, format: "%b %Y").average(:value)
    @Light = @Light.to_a
    keys = [:date, :value]
    @Light = @Light.each.map {|value| Hash[keys.zip(value)]}
@@ -70,7 +69,7 @@ class LightsController < ApplicationController
 
   def yearly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @Light = Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('lights.created_at', range: @start_date..Time.now, format: "%Y").average(:value).take(6)
+    @Light = Light.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('lights.created_at', range: @start_date - 6.year..@start_date + 6.year, format: "%Y").average(:value).take(6)
     @Light = @Light.to_a
     keys = [:date, :value]
     @Light = @Light.each.map {|value| Hash[keys.zip(value)]}

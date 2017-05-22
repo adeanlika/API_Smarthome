@@ -1,6 +1,6 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!, except: [:get_data_sensor]
+  before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices
   def index
     @devices = Device.all
@@ -92,6 +92,7 @@ class DevicesController < ApplicationController
 
   def get_data_sensor
     @device = Device.find_by(product_id: params[:product_id])
+    @home = @device.home
     @status = 0
       if params[:te].present?
         @temperature = Temperature.new(value: params[:te],device_id: @device.id)
@@ -107,18 +108,22 @@ class DevicesController < ApplicationController
                 @alert.save
                 @home.lowertemp_flag = true
                 @home.save
-              end
-           else params[:te].to_i > @upperte.first.to_i
+             end
+           elsif params[:te].to_i > @upperte.first.to_i
              if @home.uppertemp_flag == false
                 @alert = AlertLog.new(sensor_name: 'temperature',device_id: @device.id,value: params[:te],status: 'Temperature too high')
                 @alert.save
-                @home.upperhum_flag = true
+                @home.uppertemp_flag = true
                 @home.save
               end
-
-          end
+           else
+            @home.uppertemp_flag = false
+            @home.save
+            @home.lowertemp_flag = false
+            @home.save
+           end
         end
-       end
+      end
       if params[:hu].present?
         @humidities = Humidity.new(value: params[:hu],device_id: @device.id)
         if @humidities.save
@@ -128,76 +133,87 @@ class DevicesController < ApplicationController
            @upperhum = Home.where('homes.id = ?', @device.home_id).select("upperhum").to_a
            @upperhum = @upperhum.map {|x| x.upperhum}
            if params[:hu].to_i < @lowerhum.first.to_i
-              if @home.lowerhum_flag == false
-                 @alert = AlertLog.new(sensor_name: 'Humidity',device_id: @device.id,value: params[:hu],status: 'Humidity too low')
-                 @alert.save
-                 @home.lowerhum_flag = true
-                 @home.save
-              end
-          else  params[:hu].to_i > @upperhum.first.to_i
-              if @home.upperhum_flag == false
-                 @alert = AlertLog.new(sensor_name: 'Humidity',device_id: @device.id,value: params[:hu],status: 'Humidity too high')
-                 @alert.save
-                 @home.upperhum_flag = true
-                 @home.save
-              end
+             if @home.lowerhum_flag == false
+                @alert = AlertLog.new(sensor_name: 'Humidity',device_id: @device.id,value: params[:hu],status: 'Humidity too low')
+                @alert.save
+                @home.lowerhum_flag = true
+                @home.save
+             end
+           elsif  params[:hu].to_i > @upperhum.first.to_i
+               if @home.upperhum_flag == false
+               @alert = AlertLog.new(sensor_name: 'Humidity',device_id: @device.id,value: params[:hu],status: 'Humidity too high')
+               @alert.save
+               @home.upperhum_flag = true
+               @home.save
+               end
+           else
+             @home.upperhum_flag = false
+             @home.save
+             @home.lowerhum_flag = false
+             @home.save
            end
-
-         end
+        end
       end
 
       if params[:co2].present?
-         @carbondioxides = Carbondioxide.new(value: params[:co2],device_id: @device.id)
-         if @carbondioxides.save
-            @status = @status + 1
-            @lowerco = Home.where('homes.id = ?', @device.home_id).select("lowerco").to_a
-            @lowerco = @lowerco.map {|x| x.lowerco}
-            @upperco = Home.where('homes.id = ?', @device.home_id).select("upperco").to_a
-            @upperco = @upperco.map {|x| x.upperco}
-            if params[:co2].to_i < @lowerco.first.to_i
-              if @home.lowerco_flag == false
-                 @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too low')
-                 @alert.save
-                 @home.lowerco_flag = true
-                 @home.save
-              end
-            else  params[:co2].to_i > @upperco.first.to_i
-              if @home.upperco_flag == false
-                 @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too high')
-                 @alert.save
-                 @home.upperco_flag = true
-                 @home.save
-              end
-            end
-
-          end
-
+        @carbondioxides = Carbondioxide.new(value: params[:co2],device_id: @device.id)
+        if @carbondioxides.save
+           @status = @status + 1
+           @lowerco = Home.where('homes.id = ?', @device.home_id).select("lowerco").to_a
+           @lowerco = @lowerco.map {|x| x.lowerco}
+           @upperco = Home.where('homes.id = ?', @device.home_id).select("upperco").to_a
+           @upperco = @upperco.map {|x| x.upperco}
+           if params[:co2].to_i < @lowerco.first.to_i
+             if @home.lowerco_flag == false
+                @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too low')
+                @alert.save
+                @home.lowerco_flag = true
+                @home.save
+             end
+           elsif  params[:co2].to_i > @upperco.first.to_i
+             if @home.upperco_flag == false
+                @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too high')
+                @alert.save
+                @home.upperco_flag = true
+                @home.save
+             end
+           else
+             @home.upperco_flag = false
+             @home.save
+             @home.lowerco_flag = false
+             @home.save
+           end
+        end
       end
 
-      if params[:lux].present?
-         @light = Light.new(value: params[:lux],device_id: @device.id)
+      if params[:flux].present?
+         @light = Light.new(value: params[:flux],device_id: @device.id)
          if @light.save
             @status = @status + 1
             @lowerflux= Home.where('homes.id = ?', @device.home_id).select("lowerflux").to_a
             @lowerflux = @lowerflux.map {|x| x.lowerflux}
             @upperflux= Home.where('homes.id = ?', @device.home_id).select("upperflux").to_a
             @upperflux = @upperflux.map {|x| x.upperflux}
-            if params[:lux].to_i < @lowerflux.first.to_i
+            if params[:flux].to_i < @lowerflux.first.to_i
               if @home.lowerflux_flag == false
                  @alert = AlertLog.new(sensor_name: 'Light',device_id: @device.id,value: params[:co],status: 'Flux too low')
                  @alert.save
                  @home.lowerflux_flag = true
                  @home.save
-               end
-            else params[:lux].to_i > @upperflux.first.to_i
-              if @home.upperflux_flag == false
+              end
+            elsif params[:flux].to_i > @upperflux.first.to_i
+               if @home.upperflux_flag == false
                  @alert = AlertLog.new(sensor_name: 'Light',device_id: @device.id,value: params[:co],status: 'Flux too high')
                  @alert.save
                  @home.upperflux_flag = true
                  @home.save
-             end
-
-           end
+               end
+            else
+               @home.upperflux_flag = false
+               @home.save
+               @home.lowerflux_flag = false
+               @home.save
+            end
          end
       end
 

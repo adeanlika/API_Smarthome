@@ -20,6 +20,6 @@ has_many :motions
 has_many :carbondioxides
 has_many :alert_logs
 has_many :lights
-accepts_nested_attributes_for :temperatures, :humidities, :carbondioxides, :motions, :alert_logs, :lights
+accepts_nested_attributes_for :temperatures, :humidities, :carbondioxides, :motions, :alert_logs, :lights, :home
 
 end

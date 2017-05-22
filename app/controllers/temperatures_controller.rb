@@ -34,8 +34,8 @@ class TemperaturesController < ApplicationController
   end
 
 def daily
-   @start_date = params[:start_date].to_date.beginning_of_day
-   @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('temperatures.created_at', range: @start_date..Time.now).average(:value).take(6)
+   @start_date = params[:start_date].to_date.beginning_of_month
+   @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_day('temperatures.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:value)
    @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
@@ -44,8 +44,8 @@ def daily
   end
 
   def weekly
-  @start_date = params[:start_date].to_date.beginning_of_day
-  @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('temperatures.created_at', range: @start_date..Time.now).average(:value).take(6)
+  @start_date = params[:start_date].to_date.beginning_of_week
+  @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_week('temperatures.created_at', range: @start_date - 6.week..@start_date + 6.week).average(:value)
   @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
@@ -54,8 +54,8 @@ def daily
   end
 
   def monthly
-   @start_date = params[:start_date].to_date.beginning_of_day
-   @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('temperatures.created_at', range: @start_date..Time.now, format: "%b %Y").average(:value).take(6)
+   @start_date = params[:start_date].to_date.beginning_of_year
+   @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_month('temperatures.created_at', range: @start_date..@start_date +1.year - 1.day, format: "%b %Y").average(:value)
    @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
@@ -64,8 +64,8 @@ def daily
   end
 
   def yearly
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('temperatures.created_at', range: @start_date..Time.now, format: "%Y").average(:value).take(6)
+    @start_date = params[:start_date].to_date.beginning_of_year
+    @Temperature = Temperature.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id]).group_by_year('temperatures.created_at', range: @start_date - 6.year..@start_date + 6.year, format: "%Y").average(:value)
     @Temperature = @Temperature.to_a
    keys = [:date, :value]
    @Temperature = @Temperature.each.map {|value| Hash[keys.zip(value)]}
