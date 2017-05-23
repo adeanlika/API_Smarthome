@@ -3,7 +3,7 @@ class HomesController < ApplicationController
   before_action :authenticate_user!
   # GET /homes
   def index
-    @homes = current_user.homes.find_by(:devid)
+    @homes = current_user.homes
     render json: @homes
   end
 
@@ -87,7 +87,8 @@ class HomesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_home
-      @home = Home.find(params[:id])
+      @home = current_user.homes.find(params[:id])
+      raise ActiveRecord::RecordNotFound unless @home
     end
 
     # Only allow a trusted parameter "white list" through.
