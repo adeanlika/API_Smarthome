@@ -12,5 +12,7 @@ class User < ActiveRecord::Base
 #=======
 #>>>>>>> 43d8ae69aa1c1ce61ca02044cacb080aa6b97770
   include DeviseTokenAuth::Concerns::User
-has_many :homes, through: :homes_users
+
+  has_many :homes, through: :homes_users
+  has_many :homes_users
 end
