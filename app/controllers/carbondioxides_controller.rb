@@ -1,4 +1,4 @@
-class CarbondioxidesController < ApplicationController
+class CarbondioxidesController < ApiController
   before_action :set_carbondioxide, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   # GET /carbondioxides

@@ -1,4 +1,4 @@
-class EnergiesController < ApplicationController
+class EnergiesController < ApiController
   before_action :set_energy, only: [:show, :update, :destroy]
   # before_action :authenticate_user!, except: [:get_data_energy]
   # GET /energies

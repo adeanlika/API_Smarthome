@@ -1,4 +1,4 @@
-class EnergyAlertLogsController < ApplicationController
+class EnergyAlertLogsController < ApiController
   before_action :set_energy_alert_log, only: [:show, :update, :destroy]
 
   # GET /energy_alert_logs

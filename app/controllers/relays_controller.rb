@@ -1,4 +1,4 @@
-class RelaysController < ApplicationController
+class RelaysController < ApiController
   before_action :set_relay, only: [:show, :update, :destroy]
 # before_action :authenticate_user!
 

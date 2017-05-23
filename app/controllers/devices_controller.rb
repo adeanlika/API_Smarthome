@@ -1,4 +1,4 @@
-class DevicesController < ApplicationController
+class DevicesController < ApiController
   before_action :set_device, only: [:show, :update, :destroy]
   before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices

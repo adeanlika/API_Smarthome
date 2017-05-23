@@ -1,4 +1,4 @@
-class MotionsController < ApplicationController
+class MotionsController < ApiController
   before_action :set_motion, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   # GET /motions

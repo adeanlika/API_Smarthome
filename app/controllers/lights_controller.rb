@@ -1,4 +1,4 @@
-class LightsController < ApplicationController
+class LightsController < ApiController
   before_action :set_light, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   #ET /lights

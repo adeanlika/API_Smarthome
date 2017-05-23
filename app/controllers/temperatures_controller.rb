@@ -1,4 +1,4 @@
-class TemperaturesController < ApplicationController
+class TemperaturesController < ApiController
   before_action :set_temperature, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   # GET /temperatures

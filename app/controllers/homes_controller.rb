@@ -1,4 +1,4 @@
-class HomesController < ApplicationController
+class HomesController < ApiController
   before_action :set_home, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   # GET /homes

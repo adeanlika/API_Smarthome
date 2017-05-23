@@ -1,4 +1,4 @@
-class HumiditiesController < ApplicationController
+class HumiditiesController < ApiController
 before_action :set_humidity, only: [:show, :update, :destroy]
 before_action :authenticate_user!
   # GET /humidities
