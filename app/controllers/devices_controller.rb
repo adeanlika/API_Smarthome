@@ -91,7 +91,7 @@ class DevicesController < ApplicationController
 
 
   def get_data_sensor
-    @device = Device.find_by(product_id: params[:product_id])
+    @device = Device.find_by(product_id: params[:device_id])
     @home = @device.home
     @status = 0
       if params[:te].present?
