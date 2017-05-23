@@ -4,11 +4,9 @@ RailsAdmin.config do |config|
 
   ## == Devise ==
   config.authenticate_with do
-    authenticate_or_request_with_http_basic('Login required') do |username, password|
-      username == "admin" &&
-      password == "admin"
-    end
+    warden.authenticate! scope: :superuser
   end
+  config.current_user_method(&:current_superuser)
   # config.current_user_method(&:current_user)
 
   ## == Cancan ==

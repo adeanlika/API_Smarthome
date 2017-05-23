@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
 
+  root to: redirect('/admin')
+  devise_for :superusers, controllers: {
+    sessions: 'superusers/sessions',
+    passwords: 'superusers/passwords',
+    registrations: 'superusers/registrations'
+  }
   resources :energy_alert_logs
   resources :lights
 
