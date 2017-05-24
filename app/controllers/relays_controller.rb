@@ -35,7 +35,7 @@ class RelaysController < ApiController
       puts "#{@gateway_id}"
       @product_id = @joins.select("devices.product_id").map{ |h| h[:product_id]}.to_sentence
       puts "#{@product_id}"
-      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing).join("")
+      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing,:ac_brand).join("")
       puts "#{@data}"
       # Server that the input is in XML format.
       #     req.Server that the input is in XML format.
