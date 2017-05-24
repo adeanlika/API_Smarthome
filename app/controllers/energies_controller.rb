@@ -160,7 +160,7 @@ class EnergiesController < ApiController
   #@energy = @energy.first - @energy.last
   #   @energy = @energy.each.map {|value| Hash[keys.zip(value)]}
   render json: @daily_bar
-  end
+end
 
   def weekly
     Time.zone = "Bangkok"
@@ -401,6 +401,11 @@ class EnergiesController < ApiController
     @volt = @volt.each.map {|value| Hash[keys.zip(value)]}
     #@Humidity.shift
     render json: @volt
+  end
+  def cost_daily
+    # @put = daily
+    #  @put = @put.map(&:to_a)#collect { |n| n * 2 }
+    # render json: @put
   end
   private
     # Use callbacks to share common setup or constraints between actions.

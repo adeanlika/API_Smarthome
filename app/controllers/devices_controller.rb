@@ -1,6 +1,6 @@
 class DevicesController < ApiController
   before_action :set_device, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, except: [:get_data_sensor]
+  # before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices
   def index
     @devices = Device.all
@@ -97,7 +97,16 @@ class DevicesController < ApiController
       if params[:te].present?
         @temperature = Temperature.new(value: params[:te],device_id: @device.id)
         if @temperature.save
-           @status = @status + 1
+           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+           registration_ids = []
+           @home.users.each do |u|
+             registration_ids.push(u.fcm_token)
+           end
+           if registration_ids.any?
+              options = {data:{code: "UPDATE_TEMPERATURE"}}
+              response = fcm.send(registration_ids, options)
+           end
+           @status = @status + 11111111
            @lowerte = Home.where('homes.id = ?', @device.home_id).select("lowertemp").to_a
            @lowerte = @lowerte.map {|x| x.lowertemp}
            @upperte = Home.where('homes.id = ?', @device.home_id).select("uppertemp").to_a
@@ -127,7 +136,16 @@ class DevicesController < ApiController
       if params[:hu].present?
         @humidities = Humidity.new(value: params[:hu],device_id: @device.id)
         if @humidities.save
-           @status = @status +1
+           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+           registration_ids = []
+           @home.users.each do |u|
+             registration_ids.push(u.fcm_token)
+           end
+           if registration_ids.any?
+              options = {data:{code: "UPDATE_HUMIDITY"}}
+              response = fcm.send(registration_ids, options)
+           end
+           @status = @status + 11111111
            @lowerhum = Home.where('homes.id = ?', @device.home_id).select("lowerhum").to_a
            @lowerhum = @lowerhum.map {|x| x.lowerhum}
            @upperhum = Home.where('homes.id = ?', @device.home_id).select("upperhum").to_a
@@ -158,7 +176,16 @@ class DevicesController < ApiController
       if params[:co2].present?
         @carbondioxides = Carbondioxide.new(value: params[:co2],device_id: @device.id)
         if @carbondioxides.save
-           @status = @status + 1
+           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+           registration_ids = []
+           @home.users.each do |u|
+             registration_ids.push(u.fcm_token)
+           end
+           if registration_ids.any?
+              options = {data:{code: "UPDATE_CARBONDIOXIDE"}}
+              response = fcm.send(registration_ids, options)
+          end
+           @status = @status + 11111111
            @lowerco = Home.where('homes.id = ?', @device.home_id).select("lowerco").to_a
            @lowerco = @lowerco.map {|x| x.lowerco}
            @upperco = Home.where('homes.id = ?', @device.home_id).select("upperco").to_a
@@ -187,9 +214,18 @@ class DevicesController < ApiController
       end
 
       if params[:light].present?
+        fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+        registration_ids = []
+        @home.users.each do |u|
+          registration_ids.push(u.fcm_token)
+        end
+        if registration_ids.any?
+           options = {data:{code: "UPDATE_LIGHT"}}
+           response = fcm.send(registration_ids, options)
+        end
          @light = Light.new(value: params[:light],device_id: @device.id)
          if @light.save
-            @status = @status + 1
+            @status = @status + 11111111
             @lowerflux= Home.where('homes.id = ?', @device.home_id).select("lowerflux").to_a
             @lowerflux = @lowerflux.map {|x| x.lowerflux}
             @upperflux= Home.where('homes.id = ?', @device.home_id).select("upperflux").to_a
@@ -220,7 +256,16 @@ class DevicesController < ApiController
       if params[:mot].present?
          @motions = Motion.new(value: params[:mot],device_id: @device.id)
          if @motions.save
-          @status = @status + 1
+            fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+            registration_ids = []
+            @home.users.each do |u|
+              registration_ids.push(u.fcm_token)
+            end
+            if registration_ids.any?
+               options = {data:{code: "UPDATE_MOTION"}}
+               response = fcm.send(registration_ids, options)
+            end
+          @status = @status + 11111111
          end
       end
     render json: @status

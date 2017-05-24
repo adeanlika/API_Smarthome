@@ -1,6 +1,6 @@
 class HomesController < ApiController
   before_action :set_home, only: [:show, :update, :destroy]
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   # GET /homes
   def index
     @homes = current_user.homes
@@ -82,6 +82,7 @@ class HomesController < ApiController
     @cost = (@energy_by_month.first * @biaya)/1000
     render json: @cost
   end
+
 
 
   private

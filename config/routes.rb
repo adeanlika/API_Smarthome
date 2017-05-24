@@ -40,8 +40,8 @@ get 'data_sensor', to: 'devices#get_data_sensor'
     post 'current_daily', to: 'energies#current_daily'
     post 'voltage_hourly', to: 'energies#voltage_hourly'
     post 'voltage_daily', to: 'energies#voltage_daily'
-    resources :devices do
-
+    post 'cost_daily', to: 'energies#cost_daily'
+      resources :devices do
         get 'current_sensor', to: 'homes#current'
         post 'carbondioxides_daily', to: 'carbondioxides#daily'
         post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
@@ -65,8 +65,6 @@ get 'data_sensor', to: 'devices#get_data_sensor'
       resources :alert_logs
       resources :relays
         put 'aktuator', to: 'relays#actuator'
-
-
       end
   end
  resources :users
