@@ -1,6 +1,6 @@
 class HomesController < ApiController
   before_action :set_home, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
   # GET /homes
   def index
     @homes = current_user.homes
@@ -16,6 +16,8 @@ class HomesController < ApiController
   def create
     @home = Home.new(home_params)
     if @home.save
+      @homesuser = HomesUser.new(home_id:@home.id,user_id:current_user.id)
+      @homesuser.save
       @energy = Energy.new(home_id:@home.id,cA:0,vA:0,pwr:0,energy_delta:0,total:0,tcA:0,rpA:0,pfA:0)
       @energy.save
       render json: @home
