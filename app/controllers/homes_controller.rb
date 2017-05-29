@@ -18,7 +18,7 @@ class HomesController < ApiController
     if @home.save
       @energy = Energy.new(home_id:@home.id,cA:0,vA:0,pwr:0,energy_delta:0,total:0,tcA:0,rpA:0,pfA:0)
       @energy.save
-      render json: @energy
+      render json: @home
     else
       render json: @home.errors, status: :unprocessable_entity
     end
