@@ -16,7 +16,7 @@ class HomesController < ApiController
   def create
     @home = Home.new(home_params)
     if @home.save
-      @energy = Energy.new(home_id:@home.id,cA:0,vA:0,pwr:0,energy_delta:0,total:0,tvA:0,rpA:0,pfA:0)
+      @energy = Energy.new(home_id:@home.id,cA:0,vA:0,pwr:0,energy_delta:0,total:0,tcA:0,rpA:0,pfA:0)
       @energy.save
       render json: @energy
     else
