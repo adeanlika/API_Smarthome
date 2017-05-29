@@ -11,8 +11,8 @@
 class Home < ApplicationRecord
 	# validates :devid, uniqueness: true
 	has_many :users, through: :homes_users
-	has_many :homes_users
-	has_many :devices
-	has_many :energy
-	has_many :energy_alert_logs
+	has_many :homes_users, dependent: :destroy
+	has_many :devices, dependent: :destroy
+	has_many :energy, dependent: :destroy
+	has_many :energy_alert_logs, dependent: :destroy
 end
