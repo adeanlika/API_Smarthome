@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170529075120) do
+ActiveRecord::Schema.define(version: 20170530073815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,30 +87,32 @@ ActiveRecord::Schema.define(version: 20170529075120) do
   end
 
   create_table "homes", force: :cascade do |t|
-    t.datetime "created_at",       null: false
+    t.datetime "created_at",                           null: false
     t.string   "name"
-    t.float    "lowertemp"
-    t.float    "uppertemp"
-    t.float    "lowerhum"
-    t.float    "upperhum"
-    t.float    "lowerco"
-    t.float    "upperco"
-    t.float    "lowerflux"
-    t.float    "upperflux"
-    t.float    "upperenergy"
+    t.float    "lowertemp",        default: 0.0
+    t.float    "uppertemp",        default: 1000000.0
+    t.float    "lowerhum",         default: 0.0
+    t.float    "upperhum",         default: 1000000.0
+    t.float    "lowerco",          default: 0.0
+    t.float    "upperco",          default: 1000000.0
+    t.float    "lowerflux",        default: 0.0
+    t.float    "upperflux",        default: 1000000.0
+    t.float    "upperenergy",      default: 1000000.0
     t.string   "devid"
     t.string   "gateway_id"
-    t.boolean  "lowertemp_flag"
-    t.boolean  "uppertemp_flag"
-    t.boolean  "lowerhum_flag"
-    t.boolean  "upperhum_flag"
-    t.boolean  "lowerco_flag"
-    t.boolean  "upperco_flag"
-    t.boolean  "upperenergy_flag"
-    t.boolean  "lowerflux_flag"
-    t.boolean  "upperflux_flag"
-    t.datetime "updated_at",       null: false
+    t.boolean  "lowertemp_flag",   default: false
+    t.boolean  "uppertemp_flag",   default: false
+    t.boolean  "lowerhum_flag",    default: false
+    t.boolean  "upperhum_flag",    default: false
+    t.boolean  "lowerco_flag",     default: false
+    t.boolean  "upperco_flag",     default: false
+    t.boolean  "upperenergy_flag", default: false
+    t.boolean  "lowerflux_flag",   default: false
+    t.boolean  "upperflux_flag",   default: false
+    t.datetime "updated_at",                           null: false
     t.float    "supply"
+    t.float    "cost_limit",       default: 1000000.0
+    t.boolean  "cost_limit_flag",  default: false
   end
 
   create_table "homes_users", force: :cascade do |t|

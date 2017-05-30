@@ -38,23 +38,6 @@ class EnergiesController < ApiController
     @energy.destroy
   end
 
-  def supply(home_id)
-    @home = Home.find(home_id)
-    @supply = @home.supply
-    if @supply = 1300
-      @supply = 1467.28
-    elsif @supply = 2200
-      @supply = 1467.28
-    elsif @supply = 3500
-      @supply = 1467.28
-    elsif @supply = 5500
-      @supply = 1467.28
-    elsif @supply = 6600
-      @supply = 1467.28
-    end
-    return @supply
-  end
-
   def get_data_energy
     @energy = Energy.new(energy_params)
     @home = Home.find_by(devid: params[:devid])
@@ -71,15 +54,12 @@ class EnergiesController < ApiController
       end
       @status = 1
       d = Date.today
-      @energy_by_month = Energy.joins(:home).where('homes.id = ?', @home.id).select("total,energies.created_at").order('created_at ASC')
-      @energy_by_month = @energy_by_month.where(:created_at => d.beginning_of_month..Time.now)
-      @energy_by_month = @energy_by_month.group_by {|t| t.created_at.beginning_of_month}
-      @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
-      key = @energy_by_month.first.keys.first
-      @energy_by_month = @energy_by_month.first[key]
+      @energy_status = get_current_energy(@home.id)
+      key = @energy_status.first.keys.first
+      @energy_status = @energy_status.first[key]
       @upperenergy = Home.where('homes.id = ?',  @home.id).select("upperenergy").to_a
       @upperenergy = @upperenergy.map {|x| x.upperenergy}
-        if @energy_by_month > @upperenergy.first
+        if @energy_status > @upperenergy.first
           if @home.upperenergy_flag == false
             @energy_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @energy_by_month,status: 'Energy too high')
             if @energy_alert.save
@@ -99,8 +79,33 @@ class EnergiesController < ApiController
             end
 
           end
-        else
+        else @energy_status < @upperenergy
           @home.upperenergy_flag = false
+          @home.save
+        end
+        @current_cost = get_cost(@home.id)
+        @cost_limit = @home.cost_limit
+        if @current_cost > @cost_limit
+          if @home.cost_limit_flag == false
+            @cost_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @current_cost,status: 'Cost exceeds limit')
+            if @cost_alert.save
+              fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+              registration_ids = []
+              @home.users.each do |u|
+                registration_ids.push(u.fcm_token)
+              end
+              if registration_ids.any?
+                options = {data:{code: "ALERT"}, notification: {body: "Cost exceeds limit", title: "Cost Warning"  }}
+
+                response = fcm.send(registration_ids, options)
+              end
+              @status = @status + 1
+              @home.cost_limit_flag = true;
+              @home.save;
+            end
+          end
+        else @current_cost < @cost_limit
+          @home.cost_limit_flag = false
         end
     else
       @status = 0
@@ -108,21 +113,42 @@ class EnergiesController < ApiController
     render json: @status
   end
 
-  def current_energy
+  def supply(home_id)
+    @home = Home.find(home_id)
+    @supply = @home.supply
+    if @supply = 1300
+      @supply = 1467.28
+    elsif @supply = 2200
+      @supply = 1467.28
+    elsif @supply = 3500
+      @supply = 1467.28
+    elsif @supply = 5500
+      @supply = 1467.28
+    elsif @supply = 6600
+      @supply = 1467.28
+    end
+    return @supply
+  end
+
+  def get_current_energy(home_id)
     d = Date.today
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = Energy.joins(:home).where('homes.id = ?', home_id).select("total,energies.created_at").order('created_at ASC')
     @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
-    @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
-    @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
-    @energy_by_month = @energy_by_month.map do |g|
+    @current_energy = @energy.group_by {|t| t.created_at.beginning_of_month}
+    @current_energy =  @current_energy.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    return @current_energy
+  end
+  def current_energy
+    @energy_status = get_current_energy(params[:home_id])
+    @energy_status= @energy_status.map do |g|
             k, v = g.first
             { "date"=> k.to_s, "value"=>v }
             end
     # key = @energy_by_month.first.keys.first
-    @energy_by_month = @energy_by_month.reduce Hash.new, :merge
+    @energy_status = @energy_status.reduce Hash.new, :merge
     @all_status = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select(:cA,:pwr,:vA).last
-    @energy_by_month = @energy_by_month.reverse_merge(@all_status.as_json)
-    render json: @energy_by_month
+    @energy_status = @energy_status.reverse_merge(@all_status.as_json)
+    render json: @energy_status
     # new[date: key, value: @energy_by_month.first[key]]
   end
 
@@ -146,7 +172,7 @@ class EnergiesController < ApiController
     @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
     @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
     @energy_by_month = @energy_by_month.first.values
-    @supply = supply(params[:home_id])
+    @supply = supply(home_id)
     @cost = (@energy_by_month.first * @supply)/1000
     return @cost
   end
@@ -480,22 +506,22 @@ end
     render json: @volt
   end
 
-  def supply(home_id)
-    @home = Home.find(home_id)
-    @supply = @home.supply
-    if @supply = 1300
-      @supply = 1467.28
-    elsif @supply = 2200
-      @supply = 1467.28
-    elsif @supply = 3500
-      @supply = 1467.28
-    elsif @supply = 5500
-      @supply = 1467.28
-    elsif @supply = 6600
-      @supply = 1467.28
-    end
-    return @supply
-  end
+  # def supply(home_id)
+  #   @home = Home.find(home_id)
+  #   @supply = @home.supply
+  #   if @supply = 1300
+  #     @supply = 1467.28
+  #   elsif @supply = 2200
+  #     @supply = 1467.28
+  #   elsif @supply = 3500
+  #     @supply = 1467.28
+  #   elsif @supply = 5500
+  #     @supply = 1467.28
+  #   elsif @supply = 6600
+  #     @supply = 1467.28
+  #   end
+  #   return @supply
+  # end
 
   def cost_daily
     @cost_daily = get_daily(params[:start_date].to_date.beginning_of_month)

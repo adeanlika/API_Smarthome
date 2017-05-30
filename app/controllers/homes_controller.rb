@@ -101,7 +101,7 @@ class HomesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def home_params
-      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy,:supply, :gateway_id, :uppertemp_flag, :lowertemp_flag)
+      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy,:cost_limit, :supply, :gateway_id, :uppertemp_flag, :lowertemp_flag, :cost_limit_flag)
     end
     def get_energy_params
       params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tcA, :rpA, :pfA)

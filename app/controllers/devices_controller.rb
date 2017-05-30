@@ -47,7 +47,14 @@ class DevicesController < ApiController
   end
 
   def test
-
+    d = Date.today
+    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
+    @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+    @current_energy = @energy.group_by {|t| t.created_at.beginning_of_month}
+    @current_energy =  @current_energy.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    key = @current_energy.first.keys.first
+    @current_energy = @current_energy.first[key]
+    render json: @current_energy
   end
 
 
