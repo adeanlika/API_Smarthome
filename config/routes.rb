@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
 
-post 'test', to: 'devices#test'
+
 get 'data_energy', to: 'energies#get_data_energy'
 get 'data_sensor', to: 'devices#get_data_sensor'
 #get 'current', to: 'homes#current'
@@ -29,9 +29,10 @@ get 'data_sensor', to: 'devices#get_data_sensor'
 
   resources :homes_users
   resources :homes do
-    get 'current_energy', to: 'homes#current_energy'
-    get 'cost', to: 'homes#cost'
-    get 'presentase', to: 'homes#presentase'
+    get 'test', to: 'devices#test'
+    get 'current_energy', to: 'energies#current_energy'
+    get 'cost', to: 'energies#cost'
+    get 'presentase', to: 'energies#presentase'
     post 'energy_daily', to: 'energies#daily'
     post 'energy_weekly', to: 'energies#weekly'
     post 'energy_monthly', to: 'energies#monthly'
@@ -41,8 +42,9 @@ get 'data_sensor', to: 'devices#get_data_sensor'
     post 'voltage_hourly', to: 'energies#voltage_hourly'
     post 'voltage_daily', to: 'energies#voltage_daily'
     post 'cost_daily', to: 'energies#cost_daily'
+    post 'cost_monthly', to: 'energies#cost_monthly'
       resources :devices do
-        get 'current_sensor', to: 'homes#current'
+        get 'current_sensor', to: 'devices#current_sensor'
         post 'carbondioxides_daily', to: 'carbondioxides#daily'
         post 'carbondioxides_weekly', to: 'carbondioxides#weekly'
         post 'carbondioxides_monthly', to: 'carbondioxides#monthly'

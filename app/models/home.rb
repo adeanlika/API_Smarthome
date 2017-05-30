@@ -9,7 +9,9 @@
 #
 
 class Home < ApplicationRecord
-	# validates :devid, uniqueness: true
+	validates :devid,presence: true 
+	validates :name,presence: true
+	validates :gateway_id, presence: true
 	has_many :users, through: :homes_users
 	has_many :homes_users, dependent: :destroy
 	has_many :devices, dependent: :destroy

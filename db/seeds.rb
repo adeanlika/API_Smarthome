@@ -33,14 +33,14 @@
 # end
 # p "Created #{Carbondioxide.count} Carbondioxide"
 #
-60.times do |index|
- 	2.times do |index2|
-    Energy.create!(total: Faker::Number.normal(100,2),
-                home_id: 2,
-   	            created_at: index.days.ago)
-    			end
-end
-p "Created #{Energy.count} Energy_Delta"
+# 60.times do |index|
+#  	2.times do |index2|
+#     Energy.create!(total: Faker::Number.normal(100,2),
+#                 home_id: 2,
+#    	            created_at: index.days.ago)
+#     			end
+# end
+# p "Created #{Energy.count} Energy_Delta"
 # 5.times do |index|
 #  	2.times do |index2|
 #   	Motion.create!(value: Faker::Number.digit,

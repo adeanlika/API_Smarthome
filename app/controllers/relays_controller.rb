@@ -79,7 +79,7 @@ class RelaysController < ApiController
             res.error!
           end
 
-      render json: req.body
+      render json: @data
     else
       render json: @relay.errors, status: :unprocessable_entity
     end

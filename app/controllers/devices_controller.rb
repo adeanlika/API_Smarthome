@@ -47,45 +47,7 @@ class DevicesController < ApiController
   end
 
   def test
-    Time.zone = "Bangkok"
-    @start_date = params[:start_date].to_date.beginning_of_day
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 5.day+23.hour+59.minute).count(:total)
-    @count = @count.collect {|ind| ind[1]}
-    # @energy = Energy.all.select("date(created_at) as created_date").group("created_date")
-    # @start_date = params[:start_date]
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where('energies.created_at' => @start_date..@start_date + 5.day+23.hour+59.minute).group_by {|t| t.created_at.beginning_of_day}
-    @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
-    @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
-    @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
-    @daily_bar = []
-    counter = 0
-    first = 0
-    last = 0
-    empty = true
-      @count.each_index do |i|
-        if empty == true
-          first = i
-        end
-        if @count[i] != 0
-          last = i
-          empty = false
-        end
-      end
 
-       @count.each_index do |index|
-        if @count[index] != 0
-          if first == index
-             @daily_bar << @energy_last[0] - @energy_first[0]
-          else
-            @daily_bar << @energy_last[counter + 1] - @energy_last[counter]
-            counter = counter + 1
-        end
-      elsif @count[index] == 0
-         @daily_bar << @count[index]
-       end
-       end
-    render json: @mop
   end
 
 
@@ -270,7 +232,10 @@ class DevicesController < ApiController
       end
     render json: @status
   end
-
+  def current_sensor()
+    @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
+    render json: @current
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_device
