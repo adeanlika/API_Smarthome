@@ -43,6 +43,9 @@ class AlertsController < ApiController
   def alert_by_date
     @alert = Alert.all
     @alert = @alert.group_by {|t| t.created_at.beginning_of_day}
+    @alert = @alert.to_a
+    keys = [:date, :value]
+    @alert = @alert.each.map {|value| Hash[keys.zip(value)]}
     render json: @alert
   end
   private
