@@ -27,6 +27,8 @@ class DevicesController < ApiController
       @carbondioxide.save
       @light = Light.new(value:0,device_id:@device.id)
       @light.save
+      @relay = Relay.new(device_id: @device.id,relay1: 0,relay2: 0,relay3: 0,relay4: 0,relay5: 0,relay6: 0,relay7: 0,relay8: 0,relay1name: 'Relay 1',relay2name: 'Relay 2',relay3name: 'Relay 3',relay4name: 'Relay 4',relay5name: 'Relay 5',relay6name: 'Relay 6',relay7name: 'Relay 7',relay8name: 'Relay 8',ac_enable: 0,ac_power: 0,ac_mode: 0,ac_temp:0,ac_speed: 0,ac_swing: 0,ac_brand: 0,ac_state: 0)
+      @relay.save
       render json: @device, status: :created
     else
       render json: @device.errors, status: :unprocessable_entity
