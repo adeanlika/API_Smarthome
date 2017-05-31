@@ -35,7 +35,11 @@ class LightsController < ApiController
 
   # DELETE /lights/1
   def destroy
-    @light.destroy
+    if @light.destroy
+      render json: true
+    else
+      render json:false
+    end
   end
   def daily
     @start_date = params[:start_date].to_date.beginning_of_month

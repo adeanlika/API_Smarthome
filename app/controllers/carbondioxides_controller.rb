@@ -35,7 +35,11 @@ class CarbondioxidesController < ApiController
 
   # DELETE /carbondioxides/1
   def destroy
-    @carbondioxide.destroy
+  if  @carbondioxide.destroy
+    render json: true
+  else
+    render json: false
+  end
   end
   def daily
     @start_date = params[:start_date].to_date.beginning_of_month

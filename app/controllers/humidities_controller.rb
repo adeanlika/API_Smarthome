@@ -35,7 +35,11 @@ before_action :authenticate_user!
 
   # DELETE /humidities/1
   def destroy
-    @humidity.destroy
+    if @humidity.destroy
+      render json: true
+    else
+      render json: false
+    end
   end
 
 

@@ -75,7 +75,11 @@ def daily
 
   # DELETE /temperatures/1
   def destroy
-    @temperature.destroy
+    if @temperature.destroy
+      render json: true
+    else
+      render json: false
+    end
   end
 
   private

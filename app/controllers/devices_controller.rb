@@ -45,7 +45,11 @@ class DevicesController < ApiController
   end
   # DELETE /devices/1
   def destroy
-    @device.destroy
+  if  @device.destroy
+    render json: true
+  else
+    render json:false
+  end 
   end
 
   def test

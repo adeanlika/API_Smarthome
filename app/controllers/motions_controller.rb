@@ -35,7 +35,11 @@ class MotionsController < ApiController
 
   # DELETE /motions/1
   def destroy
-    @motion.destroy
+    if @motion.destroy
+      render json: true
+    else
+      render json:false
+    end
   end
 
   private

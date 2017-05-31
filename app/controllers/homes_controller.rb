@@ -37,7 +37,11 @@ class HomesController < ApiController
 
   # DELETE /homes/1
   def destroy
-    @home.destroy
+  if @home.destroy
+    render json: true
+  else
+    render json:false
+  end
   end
 
 

@@ -13,12 +13,12 @@
 
 class Device < ApplicationRecord
 belongs_to :home
-has_one :relay
-has_many :humidities
-has_many :temperatures
-has_many :motions
-has_many :carbondioxides
-has_many :lights
+has_one :relay, dependent: :destroy
+has_many :humidities, dependent: :destroy
+has_many :temperatures, dependent: :destroy
+has_many :motions, dependent: :destroy
+has_many :carbondioxides, dependent: :destroy
+has_many :lights, dependent: :destroy
 accepts_nested_attributes_for :temperatures, :humidities, :carbondioxides, :motions, :lights, :home
 
 end

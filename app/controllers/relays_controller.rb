@@ -10,7 +10,11 @@ class RelaysController < ApiController
 
   # GET /relays/1
   def show
-    render json: @relay
+    if render json: @relay
+      render json: true
+    else
+      render json: false
+    end
   end
 
   # POST /relays

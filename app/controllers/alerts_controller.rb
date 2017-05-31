@@ -34,7 +34,11 @@ class AlertsController < ApiController
 
   # DELETE /energy_alert_logs/1
   def destroy
-    @alert.destroy
+  if  @alert.destroy
+    render json: true
+  else
+    render json: false
+  end
   end
   def alert_by_date
     @alert = Alert.all

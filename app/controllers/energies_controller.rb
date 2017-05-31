@@ -35,7 +35,11 @@ class EnergiesController < ApiController
 
   # DELETE /energies/1
   def destroy
-    @energy.destroy
+    if @energy.destroy
+      render json: true
+    else
+      render json: false
+    end
   end
 
   def get_data_energy
