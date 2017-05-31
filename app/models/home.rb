@@ -9,12 +9,12 @@
 #
 
 class Home < ApplicationRecord
-	validates :devid,presence: true 
+	validates :devid,presence: true
 	validates :name,presence: true
 	validates :gateway_id, presence: true
 	has_many :users, through: :homes_users
 	has_many :homes_users, dependent: :destroy
 	has_many :devices, dependent: :destroy
 	has_many :energy, dependent: :destroy
-	has_many :energy_alert_logs, dependent: :destroy
+	has_many :alerts, dependent: :destroy
 end

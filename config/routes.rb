@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     passwords: 'superusers/passwords',
     registrations: 'superusers/registrations'
   }
-  resources :energy_alert_logs
+  resources :alerts
   resources :lights
 
   resources :carbondioxides
@@ -29,6 +29,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
 
   resources :homes_users
   resources :homes do
+    get 'alert', to: 'alerts#alert_by_date'
     get 'test', to: 'devices#test'
     get 'current_energy', to: 'energies#current_energy'
     get 'cost', to: 'energies#cost'
@@ -64,8 +65,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
         post 'lights_weekly', to: 'lights#weekly'
         post 'lights_monthly', to: 'lights#monthly'
         post 'lights_yearly', to: 'lights#yearly'
-      resources :alert_logs
-      resources :relays
+          resources :relays
         put 'aktuator', to: 'relays#actuator'
       end
   end

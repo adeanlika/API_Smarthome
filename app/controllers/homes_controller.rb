@@ -39,6 +39,8 @@ class HomesController < ApiController
   def destroy
     @home.destroy
   end
+
+
   # def current()
   #   @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
   #   render json: @current
@@ -101,7 +103,7 @@ class HomesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def home_params
-      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy,:cost_limit, :supply, :gateway_id, :uppertemp_flag, :lowertemp_flag, :cost_limit_flag)
+      params.permit(:devid, :name, :lowertemp, :uppertemp, :lowerhum, :upperhum, :lowerco, :upperco, :lowerflux, :upperflux, :lowerenergy, :upperenergy,:cost_limit, :supply, :gateway_id, :uppertemp_flag, :lowertemp_flag, :cost_limit_flag, :upperenergy_flag)
     end
     def get_energy_params
       params.permit(:devid, :cA, :vA, :pwr, :energy_delta, :total, :tcA, :rpA, :pfA)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170530073815) do
+ActiveRecord::Schema.define(version: 20170531042946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,14 +32,15 @@ ActiveRecord::Schema.define(version: 20170530073815) do
     t.index ["reset_password_token"], name: "index_admin_smarthomes_on_reset_password_token", unique: true, using: :btree
   end
 
-  create_table "alert_logs", force: :cascade do |t|
-    t.string   "sensor_name"
+  create_table "alerts", force: :cascade do |t|
+    t.string   "alert_type"
     t.float    "value"
     t.string   "status"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "home_id"
     t.integer  "device_id"
-    t.index ["device_id"], name: "index_alert_logs_on_device_id", using: :btree
+    t.index ["home_id"], name: "index_alerts_on_home_id", using: :btree
   end
 
   create_table "carbondioxides", force: :cascade do |t|
@@ -74,16 +75,6 @@ ActiveRecord::Schema.define(version: 20170530073815) do
     t.datetime "updated_at",   null: false
     t.integer  "home_id"
     t.index ["home_id"], name: "index_energies_on_home_id", using: :btree
-  end
-
-  create_table "energy_alert_logs", force: :cascade do |t|
-    t.string   "home_name"
-    t.float    "value"
-    t.string   "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "home_id"
-    t.index ["home_id"], name: "index_energy_alert_logs_on_home_id", using: :btree
   end
 
   create_table "homes", force: :cascade do |t|
@@ -235,10 +226,9 @@ ActiveRecord::Schema.define(version: 20170530073815) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
   end
 
-  add_foreign_key "alert_logs", "devices"
+  add_foreign_key "alerts", "homes"
   add_foreign_key "carbondioxides", "devices"
   add_foreign_key "energies", "homes"
-  add_foreign_key "energy_alert_logs", "homes"
   add_foreign_key "homes_users", "users"
   add_foreign_key "lights", "devices"
   add_foreign_key "relays", "devices"

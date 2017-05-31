@@ -61,7 +61,7 @@ class EnergiesController < ApiController
       @upperenergy = @upperenergy.map {|x| x.upperenergy}
         if @energy_status > @upperenergy.first
           if @home.upperenergy_flag == false
-            @energy_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @energy_by_month,status: 'Energy too high')
+            @energy_alert = Alert.new(alert_type: 'Energy',value: @energy_status,status: 'Energy too high',home_id: @home.id)
             if @energy_alert.save
               fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
               registration_ids = []
@@ -87,7 +87,7 @@ class EnergiesController < ApiController
         @cost_limit = @home.cost_limit
         if @current_cost > @cost_limit
           if @home.cost_limit_flag == false
-            @cost_alert = EnergyAlertLog.new(home_name: @home.name,home_id: @home.id,value: @current_cost,status: 'Cost exceeds limit')
+            @cost_alert = Alert.new(alert_type: 'Cost',value: @current_cost,status: 'Cost exceeds limit',home_id: @home.id)
             if @cost_alert.save
               fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
               registration_ids = []

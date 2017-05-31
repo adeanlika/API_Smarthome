@@ -82,14 +82,14 @@ class DevicesController < ApiController
            @upperte = @upperte.map {|x| x.uppertemp}
            if params[:te].to_i < @lowerte.first.to_i
              if @home.lowertemp_flag == false
-                @alert = AlertLog.new(sensor_name: 'temperature',device_id: @device.id,value: params[:te],status: 'Temperature too low')
+                @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too low', home_id: @home.id,device_id: @device.id)
                 @alert.save
                 @home.lowertemp_flag = true
                 @home.save
              end
            elsif params[:te].to_i > @upperte.first.to_i
              if @home.uppertemp_flag == false
-                @alert = AlertLog.new(sensor_name: 'temperature',device_id: @device.id,value: params[:te],status: 'Temperature too high')
+                @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too high',home_id: @home.id,device_id: @device.id)
                 @alert.save
                 @home.uppertemp_flag = true
                 @home.save
@@ -121,14 +121,14 @@ class DevicesController < ApiController
            @upperhum = @upperhum.map {|x| x.upperhum}
            if params[:hu].to_i < @lowerhum.first.to_i
              if @home.lowerhum_flag == false
-                @alert = AlertLog.new(sensor_name: 'Humidity',device_id: @device.id,value: params[:hu],status: 'Humidity too low')
+                @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too low',home_id: @home.id,device_id: @device.id)
                 @alert.save
                 @home.lowerhum_flag = true
                 @home.save
              end
            elsif  params[:hu].to_i > @upperhum.first.to_i
                if @home.upperhum_flag == false
-               @alert = AlertLog.new(sensor_name: 'Humidity',device_id: @device.id,value: params[:hu],status: 'Humidity too high')
+               @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too high',home_id: @home.id,device_id: @device.id)
                @alert.save
                @home.upperhum_flag = true
                @home.save
@@ -161,14 +161,14 @@ class DevicesController < ApiController
            @upperco = @upperco.map {|x| x.upperco}
            if params[:co2].to_i < @lowerco.first.to_i
              if @home.lowerco_flag == false
-                @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too low')
+                @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too low',home_id: @home.id,device_id: @device.id)
                 @alert.save
                 @home.lowerco_flag = true
                 @home.save
              end
            elsif  params[:co2].to_i > @upperco.first.to_i
              if @home.upperco_flag == false
-                @alert = AlertLog.new(sensor_name: 'Carbondioxide',device_id: @device.id,value: params[:co],status: 'CO2 too high')
+                @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too high',home_id: @home.id,device_id: @device.id)
                 @alert.save
                 @home.upperco_flag = true
                 @home.save
@@ -201,14 +201,14 @@ class DevicesController < ApiController
             @upperflux = @upperflux.map {|x| x.upperflux}
             if params[:light].to_i < @lowerflux.first.to_i
               if @home.lowerflux_flag == false
-                 @alert = AlertLog.new(sensor_name: 'Light',device_id: @device.id,value: params[:co],status: 'Flux too low')
+                 @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too low',home_id: @home.id,device_id: @device.id)
                  @alert.save
                  @home.lowerflux_flag = true
                  @home.save
               end
             elsif params[:light].to_i > @upperflux.first.to_i
                if @home.upperflux_flag == false
-                 @alert = AlertLog.new(sensor_name: 'Light',device_id: @device.id,value: params[:co],status: 'Flux too high')
+                 @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too high',home_id: @home.id,device_id: @device.id)
                  @alert.save
                  @home.upperflux_flag = true
                  @home.save
