@@ -12,6 +12,7 @@
 #
 
 class Device < ApplicationRecord
+mount_uploader :avatar, AvatarUploader
 belongs_to :home
 has_one :relay, dependent: :destroy
 has_many :humidities, dependent: :destroy

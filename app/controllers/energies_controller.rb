@@ -135,9 +135,10 @@ class EnergiesController < ApiController
   end
 
   def get_current_energy(home_id)
+    Time.zone ="Bangkok"
     d = Date.today
     @energy = Energy.joins(:home).where('homes.id = ?', home_id).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
+    @energy = @energy.where(:created_at => d.beginning_of_month.in_time_zone("Bangkok")..Time.now)
     @current_energy = @energy.group_by {|t| t.created_at.beginning_of_month}
     @current_energy =  @current_energy.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
     return @current_energy

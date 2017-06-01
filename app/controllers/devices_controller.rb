@@ -49,7 +49,7 @@ class DevicesController < ApiController
     render json: true
   else
     render json:false
-  end 
+  end
   end
 
   def test
@@ -257,6 +257,6 @@ class DevicesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def device_params
-      params.permit(:name, :product_id, :img, :home_id)
+      params.permit(:name, :product_id, :picture, :home_id)
     end
 end
