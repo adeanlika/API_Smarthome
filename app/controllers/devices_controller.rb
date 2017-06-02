@@ -45,11 +45,11 @@ class DevicesController < ApiController
   end
   # DELETE /devices/1
   def destroy
-  if  @device.destroy
-    render json: true
-  else
-    render json:false
-  end
+    if  @device.destroy
+        render json: true
+    else
+      render json:false
+    end
   end
 
   def test
@@ -71,160 +71,240 @@ class DevicesController < ApiController
     @status = 0
       if params[:te].present?
         @temperature = Temperature.new(value: params[:te],device_id: @device.id)
-        if @temperature.save
-           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
-           registration_ids = []
-           @home.users.each do |u|
-             registration_ids.push(u.fcm_token)
-           end
-           if registration_ids.any?
-              options = {data:{code: "UPDATE_TEMPERATURE"}}
-              response = fcm.send(registration_ids, options)
-           end
-           @status = @status + 11111111
-           @lowerte = Home.where('homes.id = ?', @device.home_id).select("lowertemp").to_a
-           @lowerte = @lowerte.map {|x| x.lowertemp}
-           @upperte = Home.where('homes.id = ?', @device.home_id).select("uppertemp").to_a
-           @upperte = @upperte.map {|x| x.uppertemp}
-           if params[:te].to_i < @lowerte.first.to_i
-             if @home.lowertemp_flag == false
-                @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too low', home_id: @home.id,device_id: @device.id)
-                @alert.save
-                @home.lowertemp_flag = true
-                @home.save
-             end
-           elsif params[:te].to_i > @upperte.first.to_i
-             if @home.uppertemp_flag == false
-                @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too high',home_id: @home.id,device_id: @device.id)
-                @alert.save
-                @home.uppertemp_flag = true
-                @home.save
+        @temperature.save
+        #    fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+        #    registration_ids = []
+        #    @home.users.each do |u|
+        #    registration_ids.push(u.fcm_token)
+        #   end
+        # end
+        # if registration_ids.any?
+        #    options = {data:{code: "UPDATE_TEMPERATURE"}}
+        #    response = fcm.send(registration_ids, options)
+        # end
+        @status = @status + 11111111
+        @lowerte = Home.where('homes.id = ?', @device.home_id).select("lowertemp").to_a
+        @lowerte = @lowerte.map {|x| x.lowertemp}
+        @upperte = Home.where('homes.id = ?', @device.home_id).select("uppertemp").to_a
+        @upperte = @upperte.map {|x| x.uppertemp}
+         if params[:te].to_i < @lowerte.first.to_i
+           if @home.lowertemp_flag == false
+              @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too low', home_id: @home.id,device_id: @device.id)
+              if @alert.save
+                 @home.lowertemp_flag = true
+                 @home.save
+                 fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                 registration_ids = []
+                 @home.users.each do |u|
+                 registration_ids.push(u.fcm_token)
+               end
               end
-           else
+              if registration_ids.any?
+                 options = {data:{code: "ALERT"}, notification: {body: "Temperature too high", title: "Temperature Warning"  }}
+                 response = fcm.send(registration_ids, options)
+              end
+           end
+         elsif params[:te].to_i > @upperte.first.to_i
+           if @home.uppertemp_flag == false
+              @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too high',home_id: @home.id,device_id: @device.id)
+              if @alert.save
+                 @home.uppertemp_flag = true
+                 @home.save
+                 fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                 registration_ids = []
+                 @home.users.each do |u|
+                 registration_ids.push(u.fcm_token)
+               end
+              end
+              if registration_ids.any?
+                 options = {data:{code: "ALERT"}, notification: {body: "Temperature too low", title: "Temperature Warning"  }}
+                 response = fcm.send(registration_ids, options)
+              end
+           end
+         else
             @home.uppertemp_flag = false
             @home.save
             @home.lowertemp_flag = false
             @home.save
-           end
-        end
+         end
       end
       if params[:hu].present?
         @humidities = Humidity.new(value: params[:hu],device_id: @device.id)
-        if @humidities.save
-           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
-           registration_ids = []
-           @home.users.each do |u|
-             registration_ids.push(u.fcm_token)
-           end
-           if registration_ids.any?
-              options = {data:{code: "UPDATE_HUMIDITY"}}
-              response = fcm.send(registration_ids, options)
-           end
-           @status = @status + 11111111
-           @lowerhum = Home.where('homes.id = ?', @device.home_id).select("lowerhum").to_a
-           @lowerhum = @lowerhum.map {|x| x.lowerhum}
-           @upperhum = Home.where('homes.id = ?', @device.home_id).select("upperhum").to_a
-           @upperhum = @upperhum.map {|x| x.upperhum}
-           if params[:hu].to_i < @lowerhum.first.to_i
-             if @home.lowerhum_flag == false
-                @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too low',home_id: @home.id,device_id: @device.id)
-                @alert.save
-                @home.lowerhum_flag = true
-                @home.save
-             end
-           elsif  params[:hu].to_i > @upperhum.first.to_i
-               if @home.upperhum_flag == false
-               @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too high',home_id: @home.id,device_id: @device.id)
-               @alert.save
-               @home.upperhum_flag = true
-               @home.save
+        @humidities.save
+        #    fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+        #    registration_ids = []
+        #    @home.users.each do |u|
+        #    registration_ids.push(u.fcm_token)
+        #   end
+        # end
+        # if registration_ids.any?
+        #       options = {data:{code: "UPDATE_HUMIDITY"}}
+        #       response = fcm.send(registration_ids, options)
+        # end
+        @status = @status + 11111111
+        @lowerhum = Home.where('homes.id = ?', @device.home_id).select("lowerhum").to_a
+        @lowerhum = @lowerhum.map {|x| x.lowerhum}
+        @upperhum = Home.where('homes.id = ?', @device.home_id).select("upperhum").to_a
+        @upperhum = @upperhum.map {|x| x.upperhum}
+        if params[:hu].to_i < @lowerhum.first.to_i
+           if @home.lowerhum_flag == false
+              @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too low',home_id: @home.id,device_id: @device.id)
+              if @alert.save
+                 @home.lowerhum_flag = true
+                 @home.save
+                 fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                 registration_ids = []
+                 @home.users.each do |u|
+                 registration_ids.push(u.fcm_token)
                end
-           else
-             @home.upperhum_flag = false
-             @home.save
-             @home.lowerhum_flag = false
-             @home.save
+              end
+              if registration_ids.any?
+                 options = {data:{code: "ALERT"}, notification: {body: "Humidity too high", title: "Humidity Warning"  }}
+                 response = fcm.send(registration_ids, options)
+              end
            end
+        elsif  params[:hu].to_i > @upperhum.first.to_i
+           if @home.upperhum_flag == false
+              @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too high',home_id: @home.id,device_id: @device.id)
+              if @alert.save
+                 @home.upperhum_flag = true
+                 @home.save
+                 fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                 registration_ids = []
+                 @home.users.each do |u|
+                 registration_ids.push(u.fcm_token)
+               end
+              end
+              if registration_ids.any?
+                 options = {data:{code: "ALERT"}, notification: {body: "Humidity too high", title: "Humidity Warning"  }}
+                 response = fcm.send(registration_ids, options)
+              end
+            end
+        else
+          @home.upperhum_flag = false
+          @home.save
+          @home.lowerhum_flag = false
+          @home.save
         end
       end
 
       if params[:co2].present?
         @carbondioxides = Carbondioxide.new(value: params[:co2],device_id: @device.id)
-        if @carbondioxides.save
-           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
-           registration_ids = []
-           @home.users.each do |u|
-             registration_ids.push(u.fcm_token)
-           end
-           if registration_ids.any?
-              options = {data:{code: "UPDATE_CARBONDIOXIDE"}}
-              response = fcm.send(registration_ids, options)
-          end
-           @status = @status + 11111111
-           @lowerco = Home.where('homes.id = ?', @device.home_id).select("lowerco").to_a
-           @lowerco = @lowerco.map {|x| x.lowerco}
-           @upperco = Home.where('homes.id = ?', @device.home_id).select("upperco").to_a
-           @upperco = @upperco.map {|x| x.upperco}
-           if params[:co2].to_i < @lowerco.first.to_i
-             if @home.lowerco_flag == false
-                @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too low',home_id: @home.id,device_id: @device.id)
-                @alert.save
+        @carbondioxides.save
+        #    fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+        #    registration_ids = []
+        #    @home.users.each do |u|
+        #    registration_ids.push(u.fcm_token)
+        #  end
+        # end
+        # if registration_ids.any?
+        #    options = {data:{code: "UPDATE_CARBONDIOXIDE"}}
+        #    response = fcm.send(registration_ids, options)
+        # end
+        @status = @status + 11111111
+        @lowerco = Home.where('homes.id = ?', @device.home_id).select("lowerco").to_a
+        @lowerco = @lowerco.map {|x| x.lowerco}
+        @upperco = Home.where('homes.id = ?', @device.home_id).select("upperco").to_a
+        @upperco = @upperco.map {|x| x.upperco}
+        if params[:co2].to_i < @lowerco.first.to_i
+          if @home.lowerco_flag == false
+             @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too low',home_id: @home.id,device_id: @device.id)
+             if @alert.save
                 @home.lowerco_flag = true
                 @home.save
+                fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                registration_ids = []
+                @home.users.each do |u|
+                registration_ids.push(u.fcm_token)
+              end
              end
-           elsif  params[:co2].to_i > @upperco.first.to_i
-             if @home.upperco_flag == false
-                @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too high',home_id: @home.id,device_id: @device.id)
-                @alert.save
-                @home.upperco_flag = true
-                @home.save
+             if registration_ids.any?
+                options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level too high", title: "Carbondioxide Warning"  }}
+                response = fcm.send(registration_ids, options)
              end
-           else
-             @home.upperco_flag = false
-             @home.save
-             @home.lowerco_flag = false
-             @home.save
            end
-        end
+         elsif  params[:co2].to_i > @upperco.first.to_i
+           if @home.upperco_flag == false
+              @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too high',home_id: @home.id,device_id: @device.id)
+              if @alert.save
+                 @home.upperco_flag = true
+                 @home.save
+                 fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                 registration_ids = []
+                 @home.users.each do |u|
+                 registration_ids.push(u.fcm_token)
+                end
+               end
+               if registration_ids.any?
+                  options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level too low", title: "Carbondioxide Warning"  }}
+                  response = fcm.send(registration_ids, options)
+               end
+             end
+         else
+           @home.upperco_flag = false
+           @home.save
+           @home.lowerco_flag = false
+           @home.save
+         end
       end
 
       if params[:light].present?
-        fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
-        registration_ids = []
-        @home.users.each do |u|
-          registration_ids.push(u.fcm_token)
-        end
-        if registration_ids.any?
-           options = {data:{code: "UPDATE_LIGHT"}}
-           response = fcm.send(registration_ids, options)
-        end
-         @light = Light.new(value: params[:light],device_id: @device.id)
-         if @light.save
-            @status = @status + 11111111
-            @lowerflux= Home.where('homes.id = ?', @device.home_id).select("lowerflux").to_a
-            @lowerflux = @lowerflux.map {|x| x.lowerflux}
-            @upperflux= Home.where('homes.id = ?', @device.home_id).select("upperflux").to_a
-            @upperflux = @upperflux.map {|x| x.upperflux}
-            if params[:light].to_i < @lowerflux.first.to_i
-              if @home.lowerflux_flag == false
-                 @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too low',home_id: @home.id,device_id: @device.id)
-                 @alert.save
-                 @home.lowerflux_flag = true
-                 @home.save
+        @light = Light.new(value: params[:light],device_id: @device.id)
+        @light.save
+        #    fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+        #    registration_ids = []
+        #    @home.users.each do |u|
+        #    registration_ids.push(u.fcm_token)
+        #  end
+        # end
+        # if registration_ids.any?
+        #    options = {data:{code: "UPDATE_LIGHT"}}
+        #    response = fcm.send(registration_ids, options)
+        # end
+        @status = @status + 11111111
+        @lowerflux= Home.where('homes.id = ?', @device.home_id).select("lowerflux").to_a
+        @lowerflux = @lowerflux.map {|x| x.lowerflux}
+        @upperflux= Home.where('homes.id = ?', @device.home_id).select("upperflux").to_a
+        @upperflux = @upperflux.map {|x| x.upperflux}
+        if params[:light].to_i < @lowerflux.first.to_i
+          if @home.lowerflux_flag == false
+             @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too low',home_id: @home.id,device_id: @device.id)
+             if @alert.save
+                @home.lowerflux_flag = true
+                @home.save
+                fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                registration_ids = []
+                @home.users.each do |u|
+                registration_ids.push(u.fcm_token)
               end
-            elsif params[:light].to_i > @upperflux.first.to_i
-               if @home.upperflux_flag == false
-                 @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too high',home_id: @home.id,device_id: @device.id)
-                 @alert.save
-                 @home.upperflux_flag = true
-                 @home.save
-               end
-            else
-               @home.upperflux_flag = false
-               @home.save
-               @home.lowerflux_flag = false
-               @home.save
-            end
+             end
+             if registration_ids.any?
+                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity too high", title: "Light Intensity Warning"  }}
+                response = fcm.send(registration_ids, options)
+             end
+          end
+        elsif params[:light].to_i > @upperflux.first.to_i
+          if @home.upperflux_flag == false
+             @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too high',home_id: @home.id,device_id: @device.id)
+             if @alert.save
+                @home.upperflux_flag = true
+                @home.save
+                fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
+                registration_ids = []
+                @home.users.each do |u|
+                registration_ids.push(u.fcm_token)
+              end
+             end
+             if registration_ids.any?
+                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity too low", title: "Light Intensity Warning"  }}
+                response = fcm.send(registration_ids, options)
+             end
+           end
+         else
+           @home.upperflux_flag = false
+           @home.save
+           @home.lowerflux_flag = false
+           @home.save
          end
       end
 
@@ -234,16 +314,17 @@ class DevicesController < ApiController
             fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
             registration_ids = []
             @home.users.each do |u|
-              registration_ids.push(u.fcm_token)
-            end
-            if registration_ids.any?
-               options = {data:{code: "UPDATE_MOTION"}}
-               response = fcm.send(registration_ids, options)
-            end
-          @status = @status + 11111111
+            registration_ids.push(u.fcm_token)
+          end
          end
-      end
-    render json: @status
+         if registration_ids.any?
+            options = {data:{code: "UPDATE_SENSOR"}}
+            response = fcm.send(registration_ids, options)
+         end
+          @status = @status + 11111111
+       end
+
+     render json: @status
   end
   def current_sensor()
     @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
