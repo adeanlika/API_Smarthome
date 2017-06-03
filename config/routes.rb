@@ -29,7 +29,8 @@ get 'data_sensor', to: 'devices#get_data_sensor'
 
   resources :homes_users
   resources :homes do
-    get 'alert', to: 'alerts#alert_by_date'
+    get 'alert', to: 'alerts#current_notif'
+    get 'alert_details', to: 'alerts#alert_by_date'
     get 'test', to: 'devices#test'
     get 'current_energy', to: 'energies#current_energy'
     get 'cost', to: 'energies#cost'
