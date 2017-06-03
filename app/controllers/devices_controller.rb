@@ -327,8 +327,18 @@ class DevicesController < ApiController
      render json: @status
   end
   def current_sensor()
-    @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
-    render json: @current
+    @humidity = Humidity.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("humidities.created_at ASC").select('humidities.value as humidity').last.as_json
+    # @humidity = @humidity.select("humidity")
+    @temperature = Temperature.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("temperatures.created_at ASC").select('temperatures.value as temperature').last.as_json
+    #@humidity = @temperature.temperature
+    @carbondioxide= Carbondioxide.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("carbondioxides.created_at ASC").select('carbondioxides.value as carbondioxide').last.as_json
+    @light = Light.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("lights.created_at ASC").select('lights.value as light').last.as_json
+    @motion = Motion.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("motions.created_at ASC").select('motions.value as motion').last.as_json
+    @sensor = @humidity.merge(@temperature).merge(@carbondioxide).merge(@light).merge(@motion)
+    # @sensor = @sensor.delete("id")
+
+  #@current = Home.joins( :devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
+    render json: @sensor
   end
   private
     # Use callbacks to share common setup or constraints between actions.
