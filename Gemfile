@@ -14,6 +14,8 @@ gem 'rails', '~> 5.0.1'
 gem 'groupdate'
 gem 'faker'
 gem 'fcm'
+gem 'paperclip'
+gem 'carrierwave-base64'
 gem 'carrierwave', '~> 1.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
