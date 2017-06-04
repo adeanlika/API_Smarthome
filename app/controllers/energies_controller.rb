@@ -376,7 +376,7 @@ else
   @empty = []
   sd = Date.parse(params[:start_date])
   ed = Date.parse(params[:start_date])
-  ed = ed+ 12.days
+  ed = ed+ 11.days
   sd.upto(ed) {|date| @empty << 0}
   return @empty
  end
@@ -470,7 +470,7 @@ else
   @empty = []
   sd = Date.parse(params[:start_date])
   ed = Date.parse(params[:start_date])
-  ed = ed+ 12.day
+  ed = ed+ 11.day
   sd.upto(ed) {|date| @empty << 0}
   return @empty
  end
