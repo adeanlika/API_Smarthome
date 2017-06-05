@@ -179,9 +179,9 @@ class EnergiesController < ApiController
     # @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
     # @energy_by_month = @energy_by_month.first.values
 
-    @current_energy = get_current_energy.(params[:home_id])
+    @current = get_current_energy(home_id)
     @supply = supply(home_id)
-    @cost = (@energy_by_month.first * @supply)/1000
+    @cost = (@current.first.values.first * @supply)/1000
     return @cost
   end
 
