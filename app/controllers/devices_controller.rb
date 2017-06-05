@@ -3,7 +3,7 @@ class DevicesController < ApiController
   # before_action :authenticate_user!, except: [:get_data_sensor]
   # GET /devices
   def index
-    @devices = Device.all
+    @devices = Home.find(params[:home_id]).devices
 
     render json: @devices
   end
