@@ -72,16 +72,14 @@ class EnergiesController < ApiController
               @home.users.each do |u|
                 registration_ids.push(u.fcm_token)
               end
-              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Energy too high", title: "Energy Warning"  }}
-
-                response = fcm.send(registration_ids, options)
-              end
+            end
+            if registration_ids.any?
+               options = {data:{code: "ALERT"}, notification: {body: "Energy too high", title: "Energy Warning"  }}
+               response = fcm.send(registration_ids, options)
+            end
               @status = @status + 1
               @home.upperenergy_flag = true;
               @home.save;
-            end
-
           end
         else @energy_status < @upperenergy.first
           @home.upperenergy_flag = false;
@@ -98,19 +96,18 @@ class EnergiesController < ApiController
               @home.users.each do |u|
                 registration_ids.push(u.fcm_token)
               end
-              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Cost exceeds limit", title: "Cost Warning"  }}
-
-                response = fcm.send(registration_ids, options)
-              end
-              @status = @status + 1
-              @home.cost_limit_flag = true;
-              @home.save;
             end
+            if registration_ids.any?
+               options = {data:{code: "ALERT"}, notification: {body: "Cost exceeds limit", title: "Cost Warning"  }}
+               response = fcm.send(registration_ids, options)
+            end
+              @status = @status + 1
+              @home.cost_limit_flag = true
+              @home.save
           end
         else @current_cost < @cost_limit
-          @home.cost_limit_flag = false;
-          @home.save;
+          @home.cost_limit_flag = false
+          @home.save
         end
     else
       @status = 0
