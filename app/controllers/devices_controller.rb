@@ -45,10 +45,14 @@ class DevicesController < ApiController
   end
   # DELETE /devices/1
   def destroy
-    if  @device.destroy
-        render json: true
+    if current_user.valid_password?(params[:password])
+      if  @device.destroy
+          render json: true
+      else
+          render json:false
+      end
     else
-      render json:false
+    render json:false
     end
   end
 
