@@ -78,12 +78,12 @@ class EnergiesController < ApiController
                response = fcm.send(registration_ids, options)
             end
               @status = @status + 1
-              @home.upperenergy_flag = true;
-              @home.save;
+              @home.upperenergy_flag = true
+              @home.save
           end
         else @energy_status.to_f < @upperenergy.first.to_i
-          @home.upperenergy_flag = false;
-          @home.save;
+          @home.upperenergy_flag = false
+          @home.save
         end
         @current_cost = get_cost(@home.id)
         @cost_limit = @home.cost_limit
