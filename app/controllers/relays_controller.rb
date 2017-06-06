@@ -153,6 +153,6 @@ class RelaysController < ApiController
       params.fetch(:relay, {})
     end
     def aktuator_params
-      params.permit(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8,:relay1name,:relay2name,:relay3name,:relay4name,:relay5name,:relay6name,:relay7name,:relay8name, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed, :ac_swing, :ac_brand, :device_id)
+      params.permit(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8,:relay1name,:relay2name,:relay3name,:relay4name,:relay5name,:relay6name,:relay7name,:relay8name, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed, :ac_swing, :ac_brand, :device_id,:relay1icon,:relay2icon,:relay3icon,:relay4icon,:relay5icon,:relay6icon,:relay7icon,:relay8icon)
     end
 end

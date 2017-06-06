@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170531065159) do
+ActiveRecord::Schema.define(version: 20170606035927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,9 +164,17 @@ ActiveRecord::Schema.define(version: 20170531065159) do
     t.string   "ac_swing"
     t.string   "ac_brand"
     t.string   "ac_state"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.integer  "device_id"
+    t.integer  "relay1icon", default: 0
+    t.integer  "relay2icon", default: 0
+    t.integer  "relay3icon", default: 0
+    t.integer  "relay4icon", default: 0
+    t.integer  "relay5icon", default: 0
+    t.integer  "relay6icon", default: 0
+    t.integer  "relay7icon", default: 0
+    t.integer  "relay8icon", default: 0
     t.index ["device_id"], name: "index_relays_on_device_id", using: :btree
   end
 
