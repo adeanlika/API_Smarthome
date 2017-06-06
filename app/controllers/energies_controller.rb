@@ -83,7 +83,7 @@ class EnergiesController < ApiController
             end
 
           end
-        else @energy_status < @upperenergy
+        else @energy_status < @upperenergy.first
           @home.upperenergy_flag = false
           @home.save
         end
@@ -110,6 +110,7 @@ class EnergiesController < ApiController
           end
         else @current_cost < @cost_limit
           @home.cost_limit_flag = false
+          @home.save
         end
     else
       @status = 0
