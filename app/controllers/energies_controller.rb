@@ -84,8 +84,8 @@ class EnergiesController < ApiController
 
           end
         else @energy_status < @upperenergy.first
-          @home.upperenergy_flag = false
-          @home.save
+          @home.upperenergy_flag = false;
+          @home.save;
         end
         @current_cost = get_cost(@home.id)
         @cost_limit = @home.cost_limit
@@ -109,13 +109,13 @@ class EnergiesController < ApiController
             end
           end
         else @current_cost < @cost_limit
-          @home.cost_limit_flag = false
-          @home.save
+          @home.cost_limit_flag = false;
+          @home.save;
         end
     else
       @status = 0
     end
-    render json: @status
+    render json: @current_cost
   end
 
   def supply(home_id)
