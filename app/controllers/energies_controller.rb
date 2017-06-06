@@ -63,7 +63,7 @@ class EnergiesController < ApiController
       @energy_status = @energy_status.first[key]
       @upperenergy = Home.where('homes.id = ?',  @home.id).select("upperenergy").to_a
       @upperenergy = @upperenergy.map {|x| x.upperenergy}
-        if @energy_status > @upperenergy.first
+        if @energy_status.to_f > @upperenergy.first.to_i
           if @home.upperenergy_flag == false
             @energy_alert = Alert.new(alert_type: 'Energy',value: @energy_status,status: 'Energy too high',home_id: @home.id)
             if @energy_alert.save
@@ -81,13 +81,13 @@ class EnergiesController < ApiController
               @home.upperenergy_flag = true;
               @home.save;
           end
-        else @energy_status < @upperenergy.first
+        else @energy_status.to_f < @upperenergy.first.to_i
           @home.upperenergy_flag = false;
           @home.save;
         end
         @current_cost = get_cost(@home.id)
         @cost_limit = @home.cost_limit
-        if @current_cost > @cost_limit
+        if @current_cost.to_f > @cost_limit.to_i
           if @home.cost_limit_flag == false
             @cost_alert = Alert.new(alert_type: 'Cost',value: @current_cost,status: 'Cost exceeds limit',home_id: @home.id)
             if @cost_alert.save
@@ -105,14 +105,14 @@ class EnergiesController < ApiController
               @home.cost_limit_flag = true
               @home.save
           end
-        else @current_cost < @cost_limit
+        else @current_cost.to_f < @cost_limit.to_i
           @home.cost_limit_flag = false
           @home.save
         end
     else
       @status = 0
     end
-    render json: @current_cost
+    render json: @status
   end
 
   def supply(home_id)
