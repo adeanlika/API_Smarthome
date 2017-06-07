@@ -24,7 +24,7 @@ set :branch, 'master'
  # set :shared_dirs, fetch(:shared_dirs, []).push('somedir')
  set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
  # set :shared_dirs, fetch(:shared_files, []).push('public/uploads')
- set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/assets', 'public/system', 'public/uploads')
+ set :shared_dirs, fetch(:shared_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/assets', 'public/system', 'public/uploads')
  # set :shared_paths, ['public/uploads']
 
 # This task is the environment that is loaded for all remote run commands, such as
