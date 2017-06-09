@@ -81,7 +81,7 @@ class EnergiesController < ApiController
               @home.upperenergy_flag = true
               @home.save
           end
-        else @energy_status.to_f < @upperenergy.first.to_i
+        elsif @energy_status.to_f < @upperenergy.first.to_i
           @home.upperenergy_flag = false
           @home.save
         end
@@ -105,14 +105,14 @@ class EnergiesController < ApiController
               @home.cost_limit_flag = true
               @home.save
           end
-        else @current_cost.to_f < @cost_limit.to_i
+        elsif @current_cost.to_f < @cost_limit.to_i
           @home.cost_limit_flag = false
           @home.save
         end
     else
       @status = 0
     end
-    render json: @status
+    render json: @upperenergy.first.to_i
   end
 
   def supply(home_id)
@@ -156,14 +156,9 @@ class EnergiesController < ApiController
   end
 
   def presentase
-    d = Date.today
-    @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where(:created_at => d.beginning_of_month..Time.now)
-    @energy_by_month = @energy.group_by {|t| t.created_at.beginning_of_month}
-    @energy_by_month =  @energy_by_month.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
-    @energy_by_month = @energy_by_month.first.values
+    @energy_by_month = get_current_energy(params[:home_id])
     @upperenergy = Home.where('homes.id = ?', params[:home_id]).select("upperenergy").map{ |h| h[:upperenergy]}.to_a
-    @presentase = (@energy_by_month.first / @upperenergy.first)*100
+    @presentase = (@energy_by_month.first.values.first / @upperenergy.first)*100
     render json: @presentase
   end
 
@@ -566,6 +561,7 @@ else
     @cost_monthly = @cost_monthly.collect { |n| (n * @supply)/1000 }
      render json: @cost_monthly
   end
+
 
 
   private
