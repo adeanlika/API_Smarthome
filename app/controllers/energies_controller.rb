@@ -224,7 +224,7 @@ class EnergiesController < ApiController
         @hourly_bar << @count[index]
       end
    end
-   return @count
+   return @hourly_bar
  else
    @empty = []
    sd = Date.parse("#{start_date}")
