@@ -184,7 +184,7 @@ class EnergiesController < ApiController
 
   def get_hourly(start_date)
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..start_date + 23.hour + 59.minute).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: start_date..start_date + 23.hour + 59.minute).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
