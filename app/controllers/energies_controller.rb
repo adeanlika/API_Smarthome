@@ -188,7 +188,7 @@ class EnergiesController < ApiController
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..start_date + 23.hour + 59.minute).group_by{|t| t.created_at.beginning_of_day}
+    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..start_date + 23.hour + 59.minute).group_by{|t| t.created_at.beginning_of_hour}
     if not @energy.empty?
      @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
      @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
@@ -224,7 +224,7 @@ class EnergiesController < ApiController
         @hourly_bar << @count[index]
       end
    end
-   return @hourly_bar
+   return @count
  else
    @empty = []
    sd = Date.parse("#{start_date}")
@@ -236,7 +236,7 @@ class EnergiesController < ApiController
   end
   def energy_chart
      d = Date.today
-     render json: get_hourly(d.to_date.beginning_of_day)
+     render json: get_hourly(d.to_date.in_time_zone("Bangkok").beginning_of_day)
   end
   def hourly
      render json: get_hourly(params[:start_date].to_date.beginning_of_day)
