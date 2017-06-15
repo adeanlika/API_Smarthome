@@ -29,12 +29,18 @@ get 'data_sensor', to: 'devices#get_data_sensor'
 
   resources :homes_users
   resources :homes do
+    post 'add_member', to: 'homes_users#add_member'
+    get 'home_member', to: 'homes_users#home_member'
+    post 'admin_filter', to: 'homes_users#admin_filter'
+    put 'set_admin', to: 'homes_users#set_admin'
     get 'alert', to: 'alerts#current_notif'
     get 'alert_details', to: 'alerts#alert_by_date'
     get 'test', to: 'devices#test'
     get 'current_energy', to: 'energies#current_energy'
     get 'cost', to: 'energies#cost'
     get 'presentase', to: 'energies#presentase'
+    get 'cost_chart', to: 'energies#cost_chart'
+    post 'cost_hourly', to: 'energies#cost_hourly'
     get 'energy_chart', to: 'energies#energy_chart'
     post 'energy_hourly', to: 'energies#hourly'
     post 'energy_daily', to: 'energies#daily'

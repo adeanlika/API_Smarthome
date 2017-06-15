@@ -625,6 +625,19 @@ else
   #   end
   #   return @supply
   # end
+  def cost_chart
+     d = Date.today
+     @cost_chart = get_hourly(d.to_date.in_time_zone("Bangkok").beginning_of_day)
+     @supply = supply(params[:home_id])
+     @cost_chart = @cost_chart.collect { |n| (n * @supply)/1000 }
+     render json:  @cost_chart
+  end
+  def cost_hourly
+    @cost_hourly = get_hourly(params[:start_date].to_date.beginning_of_day)
+    @supply = supply(params[:home_id])
+    @cost_hourly= @cost_hourly.collect { |n| (n * @supply)/1000 }
+    render json: @cost_hourly
+  end
 
   def cost_daily
     @cost_daily = get_daily(params[:start_date].to_date.beginning_of_month)

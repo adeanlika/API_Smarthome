@@ -38,6 +38,47 @@ class HomesUsersController < ApiController
     @homes_user.destroy
   end
 
+  def set_admin
+    @homes_user = HomesUser.find_by(home_id: params[:home_id],user_id: current_user.id)
+    if @homes_user.update(admin_params)
+       render json: @homes_user
+    else
+      render json: @homes_user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def home_member
+    @member = HomesUser.user.where(home_id: params[:home_id])
+    render json: @member
+  end
+
+  def add_member
+    @new_member = User.find_by(email: params[:email])
+    if @new_member.nil?
+      @new_member = 'User Not Found'
+    else
+    @new_member = HomesUser.create(home_id: params[:home_id],user_id: @new_member.id)
+
+  end
+    render json: @new_member.to_json
+
+  end
+
+  def admin_filter
+      # begin
+        @user = HomesUser.find_by(home_id: params[:home_id],user_id: current_user.id)
+      # rescue
+      #     @user = 0
+      # end
+      if @user.nil?
+        @admin_status = false
+      elsif @user.is_admin == true
+        @admin_status = true
+      else @user.is_admin == false
+        @admin_status = false
+      end
+      render json: @admin_status
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_homes_user
@@ -47,5 +88,8 @@ class HomesUsersController < ApiController
     # Only allow a trusted parameter "white list" through.
     def homes_user_params
       params.permit(:user_id, :home_id)
+    end
+    def admin_params
+      params.permit(:is_admin)
     end
 end
