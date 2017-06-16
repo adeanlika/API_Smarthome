@@ -39,8 +39,19 @@ class HomesUsersController < ApiController
   end
 
   def set_admin
-    @homes_user = HomesUser.find_by(home_id: params[:home_id],user_id: current_user.id)
-    if @homes_user.update(admin_params)
+    @user = User.find_by(email: params[:email])
+    @homes_user = HomesUser.find_by(home_id: params[:home_id],user_id: @user.id)
+    if @homes_user.update(is_admin: true)
+       render json: @homes_user
+    else
+      render json: @homes_user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def unset_admin
+    @user = User.find_by(email: params[:email])
+    @homes_user = HomesUser.find_by(home_id: params[:home_id],user_id: @user.id)
+    if @homes_user.update(is_admin: false)
        render json: @homes_user
     else
       render json: @homes_user.errors, status: :unprocessable_entity
@@ -48,7 +59,7 @@ class HomesUsersController < ApiController
   end
 
   def home_member
-    @member = HomesUser.user.where(home_id: params[:home_id])
+    @member = User.joins(:homes_users).where('homes_users.home_id':2).select(:email,:name,'homes_users.is_admin')
     render json: @member
   end
 
@@ -57,19 +68,13 @@ class HomesUsersController < ApiController
     if @new_member.nil?
       @new_member = 'User Not Found'
     else
-    @new_member = HomesUser.create(home_id: params[:home_id],user_id: @new_member.id)
-
-  end
-    render json: @new_member.to_json
-
+      @new_member = HomesUser.create(home_id: params[:home_id],user_id: @new_member.id)
+    end
+  render json: @new_member.to_json
   end
 
   def admin_filter
-      # begin
-        @user = HomesUser.find_by(home_id: params[:home_id],user_id: current_user.id)
-      # rescue
-      #     @user = 0
-      # end
+      @user = HomesUser.find_by(home_id: params[:home_id],user_id: current_user.id)
       if @user.nil?
         @admin_status = false
       elsif @user.is_admin == true

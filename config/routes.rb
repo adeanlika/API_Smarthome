@@ -31,7 +31,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
   resources :homes do
     post 'add_member', to: 'homes_users#add_member'
     get 'home_member', to: 'homes_users#home_member'
-    post 'admin_filter', to: 'homes_users#admin_filter'
+    get 'admin_filter', to: 'homes_users#admin_filter'
     put 'set_admin', to: 'homes_users#set_admin'
     get 'alert', to: 'alerts#current_notif'
     get 'alert_details', to: 'alerts#alert_by_date'
