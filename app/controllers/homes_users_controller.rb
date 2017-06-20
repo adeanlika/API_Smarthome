@@ -79,7 +79,8 @@ class HomesUsersController < ApiController
         @delete_member = 'User Not Found'
         render json: false
       else
-        @delete_member = HomesUser.delete(home_id: params[:home_id],user_id: @delete_member.id)
+        @delete_member = HomesUser.find_by(home_id: params[:home_id],user_id: @delete_member.id)
+        @delete_member.destroy
         render json: true
       end
   end
