@@ -37,12 +37,16 @@ class HomesController < ApiController
 
   # DELETE /homes/1
   def destroy
-  if @home.destroy
-    render json: true
+  if current_user.valid_password?(params[:password])
+    if @home.destroy
+       render json: true
+    else
+      render json:false
+    end
   else
     render json:false
   end
-  end
+end
 
 
   # def current()

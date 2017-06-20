@@ -30,6 +30,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
   resources :homes_users
   resources :homes do
     post 'add_member', to: 'homes_users#add_member'
+    delete 'delete_member', to: 'homes_users#delete_member'
     get 'home_member', to: 'homes_users#home_member'
     get 'admin_filter', to: 'homes_users#admin_filter'
     put 'set_admin', to: 'homes_users#set_admin'

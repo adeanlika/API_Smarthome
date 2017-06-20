@@ -73,6 +73,17 @@ class HomesUsersController < ApiController
   render json: @new_member.to_json
   end
 
+  def delete_member
+    @delete_member = User.find_by(email: params[:email])
+      if @delete_member.nil?
+        @delete_member = 'User Not Found'
+        render json: false
+      else
+        @delete_member = HomesUser.delete(home_id: params[:home_id],user_id: @delete_member.id)
+        render json: true
+      end
+  end
+
   def admin_filter
       @user = HomesUser.find_by(home_id: params[:home_id],user_id: current_user.id)
       if @user.nil?

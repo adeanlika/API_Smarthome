@@ -48,8 +48,8 @@ class UsersController < ApiController
 			params.permit(:provider, :uid, :name, :nickname, :image, :email, :fcm_token)
 		end
 
-		def password_params
-			params.require(:user).permit(:password, :password_confirmation, :current_password)
-		end
+		# def password_params
+		# 	params.require(:user).permit(:password, :password_confirmation, :current_password)
+		# end
 
 end
