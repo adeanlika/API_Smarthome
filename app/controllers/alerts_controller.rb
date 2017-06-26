@@ -1,6 +1,6 @@
 class AlertsController < ApiController
   before_action :set_alert, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /energy_alert_logs
   def index
     @alerts = Alert.all

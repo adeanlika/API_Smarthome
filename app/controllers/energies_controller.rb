@@ -1,6 +1,6 @@
 class EnergiesController < ApiController
   before_action :set_energy, only: [:show, :update, :destroy]
-  # before_action :authenticate_user!, except: [:get_data_energy]
+  before_action :authenticate_user!, except: [:get_data_energy]
   # GET /energies
   def index
     @energies = Energy.all
@@ -244,7 +244,7 @@ class EnergiesController < ApiController
   def get_daily(start_date)
     # koding versi baruww
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..start_date + 23 - 1.day).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..start_date + 1.month - 1.day).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
@@ -581,7 +581,7 @@ else
   end
   def voltage_daily
     @start_date = params[:start_date].to_date.beginning_of_month
-    @volt = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:cA)
+    @volt = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:vA)
     @volt = @volt.to_a
     keys = [:date, :value]
     @volt = @volt.each.map {|value| Hash[keys.zip(value)]}
