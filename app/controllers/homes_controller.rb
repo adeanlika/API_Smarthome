@@ -47,7 +47,23 @@ class HomesController < ApiController
     render json:false
   end
 end
+def set_energy_limit
+  @home = Home.find(params[:home_id])
+  if params[:energy_limit].present?
+    @cost_limit = (params[:energy_limit].to_f * @home.electricity_price)
+    @home.update(upperenergy: params[:energy_limit],cost_limit: @cost_limit)
+    @home.save
+    render json: @home
+  elsif params[:cost_limit].present?
+    @energy_limit = (params[:cost_limit].to_f / @home.electricity_price)
+    @home.update(upperenergy: @energy_limit, cost_limit: params[:cost_limit])
+    @home.save
+    render json: @home
+  else
+    render json: @home
+  end
 
+end
 
   # def current()
   #   @current = Home.joins(:devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
