@@ -244,11 +244,11 @@ class EnergiesController < ApiController
   def get_daily(start_date)
     # koding versi baruww
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..(start_date + 1.month - 1.day )).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..(start_date + 2.month - 1.day )).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..(start_date + 1.month ).in_time_zone("Bangkok")).group_by{|t| t.created_at.beginning_of_day}
+    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..(start_date + 2.month ).in_time_zone("Bangkok")).group_by{|t| t.created_at.beginning_of_day}
     if not @energy.empty?
      @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
      @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
@@ -284,7 +284,8 @@ class EnergiesController < ApiController
         @daily_bar << @count[index]
       end
    end
-   return @daily_bar
+   @number = Time::days_in_month(start_date.month)
+   return @daily_bar.take(@number)
  else
    @empty = []
    sd = Date.parse(params[:start_date])
