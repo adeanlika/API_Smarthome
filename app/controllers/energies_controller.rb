@@ -147,6 +147,7 @@ class EnergiesController < ApiController
 
 
   def get_cost(home_id)
+    @home = Home.find(params[:home_id])
     # Time.zone = "Bangkok"
     # d = Date.today
     # @energy = Energy.joins(:home).where('homes.id = ?', home_id).select("total,energies.created_at").order('created_at ASC')
@@ -156,8 +157,7 @@ class EnergiesController < ApiController
     # @energy_by_month = @energy_by_month.first.values
 
     @current = get_current_energy(home_id)
-    @supply = supply(home_id)
-    @cost = (@current.first.values.first * @supply)/1000
+    @cost = (@current.first.values.first * @home.electricity_price)/1000
     return @cost
   end
 
@@ -657,7 +657,7 @@ else
   def cost_monthly
     @home = Home.find(params[:home_id])
     @cost_monthly = get_monthly(params[:start_date].to_date.beginning_of_year)
-    @cost_monthly = @cost_monthly.collect { |n| (n * @home.electricity_price)/1000 }
+     @cost_monthly = @cost_monthly.collect { |n| (n * @home.electricity_price)/1000 }
      render json: @cost_monthly
   end
 
