@@ -597,18 +597,18 @@ else
     render json: @volt
   end
 
-  def tca_hourly
+  def power_hourly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @tca = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).average(:tcA)
+    @tca = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).average(:pwr)
     @tca = @tca.to_a
     keys = [:date, :value]
     @tca = @tca.each.map {|value| Hash[keys.zip(value)]}
     #@Humidity.shift
     render json: @tca
   end
-  def tca_daily
+  def power_daily
     @start_date = params[:start_date].to_date.beginning_of_month
-    @tca= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month - 1.day).in_time_zone("Bangkok")).average(:tcA)
+    @tca= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month - 1.day).in_time_zone("Bangkok")).average(:pwr)
     @tca= @tca.to_a
     keys = [:date, :value]
     @tca = @tca.each.map {|value| Hash[keys.zip(value)]}
@@ -634,30 +634,30 @@ else
   #   return @supply
   # end
   def cost_chart
+     @home = Home.find(params[:home_id])
      d = Date.today
      @cost_chart = get_hourly(d.to_date.in_time_zone("Bangkok").beginning_of_day)
-     @supply = supply(params[:home_id])
-     @cost_chart = @cost_chart.collect { |n| (n * @supply)/1000 }
+     @cost_chart = @cost_chart.collect { |n| (n * @home.electricity_price)/1000 }
      render json:  @cost_chart
   end
   def cost_hourly
+    @home = Home.find(params[:home_id])
     @cost_hourly = get_hourly(params[:start_date].to_date.beginning_of_day)
-    @supply = supply(params[:home_id])
-    @cost_hourly= @cost_hourly.collect { |n| (n * @supply)/1000 }
+    @cost_hourly= @cost_hourly.collect { |n| (n * @home.electricity_price)/1000 }
     render json: @cost_hourly
   end
 
   def cost_daily
+    @home = Home.find(params[:home_id])
     @cost_daily = get_daily(params[:start_date].to_date.beginning_of_month)
-    @supply = supply(params[:home_id])
-    @cost_daily = @cost_daily.collect { |n| (n * @supply)/1000 }
+    @cost_daily = @cost_daily.collect { |n| (n * @home.electricity_price)/1000 }
      render json: @cost_daily
   end
 
   def cost_monthly
+    @home = Home.find(params[:home_id])
     @cost_monthly = get_monthly(params[:start_date].to_date.beginning_of_year)
-    @supply = supply(params[:home_id])
-    @cost_monthly = @cost_monthly.collect { |n| (n * @supply)/1000 }
+    @cost_monthly = @cost_monthly.collect { |n| (n * @home.electricity_price)/1000 }
      render json: @cost_monthly
   end
 
