@@ -115,23 +115,6 @@ class EnergiesController < ApiController
     render json: @upperenergy.first.to_i
   end
 
-  def supply(home_id)
-    @home = Home.find(home_id)
-    @supply = @home.supply
-    if @supply = 1300
-      @supply = 1467.28
-    elsif @supply = 2200
-      @supply = 1467.28
-    elsif @supply = 3500
-      @supply = 1467.28
-    elsif @supply = 5500
-      @supply = 1467.28
-    elsif @supply = 6600
-      @supply = 1467.28
-    end
-    return @supply
-  end
-
   def get_current_energy(home_id)
     Time.zone ="Bangkok"
     d = Date.today
@@ -184,13 +167,12 @@ class EnergiesController < ApiController
 
   def get_hourly(start_date)
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: start_date..start_date + 23.hour + 59.minute).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: start_date.in_time_zone("Bangkok")..(start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..start_date + 23.hour + 59.minute).group_by{|t| t.created_at.beginning_of_hour}
+    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..(start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).group_by{|t| t.created_at.beginning_of_hour}
     if not @energy.empty?
-     @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
      @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
      @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
      @hourly_bar = []
@@ -213,7 +195,13 @@ class EnergiesController < ApiController
     @count.each_index do |index|
       if @count[index] != 0
         if first == index
-           @hourly_bar << @energy_last[0] - @energy_first[0]
+          @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date.in_time_zone("Bangkok"),params[:home_id]).order('created_at ASC').select('total').last
+          if @energy_first.present?
+          @hourly_bar << @energy_last[0] - @energy_first.total
+          else
+          @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+          @hourly_bar << @energy_last[0] - @energy_first[0]
+        end
         else
         #  @daily_bar << 1
            @hourly_bar << @energy_last[counter - a] - @energy_last[counter - b]
@@ -244,7 +232,7 @@ class EnergiesController < ApiController
   def get_daily(start_date)
     # koding versi baruww
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..(start_date + 1.month - 1.day )).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date.in_time_zone("Bangkok")..(start_date + 1.month - 1.day ).in_time_zone("Bangkok")).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
@@ -392,7 +380,7 @@ end
   end
   def get_monthly(start_date)
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_month('energies.created_at', range: start_date..(start_date + 1.year - 1.day)).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_month('energies.created_at', range: start_date.in_time_zone("Bangkok")..(start_date + 1.year - 1.day)).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
@@ -573,7 +561,7 @@ else
 
   def current_hourly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @current = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date..@start_date + 23.hour + 59.minute).average(:cA)
+    @current = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).average(:cA)
     @current = @current.to_a
     keys = [:date, :value]
     @current= @current.each.map {|value| Hash[keys.zip(value)]}
@@ -582,7 +570,7 @@ else
   end
   def current_daily
     @start_date = params[:start_date].to_date.beginning_of_month
-    @current = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:cA)
+    @current = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month - 1.day).in_time_zone("Bangkok")).average(:cA)
     @current = @current.to_a
     keys = [:date, :value]
     @current= @current.each.map {|value| Hash[keys.zip(value)]}
@@ -592,7 +580,7 @@ else
 
   def voltage_hourly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @volt= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date..@start_date + 23.hour + 59.minute).average(:vA)
+    @volt= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).average(:vA)
     @volt = @volt.to_a
     keys = [:date, :value]
     @volt= @volt.each.map {|value| Hash[keys.zip(value)]}
@@ -601,7 +589,7 @@ else
   end
   def voltage_daily
     @start_date = params[:start_date].to_date.beginning_of_month
-    @volt = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:vA)
+    @volt = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month - 1.day).in_time_zone("Bangkok")).average(:vA)
     @volt = @volt.to_a
     keys = [:date, :value]
     @volt = @volt.each.map {|value| Hash[keys.zip(value)]}
@@ -611,7 +599,7 @@ else
 
   def tca_hourly
     @start_date = params[:start_date].to_date.beginning_of_day
-    @tca = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date..@start_date + 23.hour + 59.minute).average(:tcA)
+    @tca = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_hour('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 23.hour + 59.minute).in_time_zone("Bangkok")).average(:tcA)
     @tca = @tca.to_a
     keys = [:date, :value]
     @tca = @tca.each.map {|value| Hash[keys.zip(value)]}
@@ -620,7 +608,7 @@ else
   end
   def tca_daily
     @start_date = params[:start_date].to_date.beginning_of_month
-    @tca= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date..@start_date + 1.month - 1.day).average(:tcA)
+    @tca= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month - 1.day).in_time_zone("Bangkok")).average(:tcA)
     @tca= @tca.to_a
     keys = [:date, :value]
     @tca = @tca.each.map {|value| Hash[keys.zip(value)]}
