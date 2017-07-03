@@ -273,7 +273,7 @@ class EnergiesController < ApiController
     @count.each_index do |index|
       if @count[index] != 0
         if first == index
-           @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date,params[:home_id]).order('created_at ASC').select('total').last
+           @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date.in_time_zone("Bangkok"),params[:home_id]).order('created_at ASC').select('total').last
            if @energy_first.present?
            @daily_bar << @energy_last[0] - @energy_first.total
            else
@@ -420,7 +420,7 @@ end
    @count.each_index do |index|
      if @count[index] != 0
        if first == index
-         @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date,params[:home_id]).order('created_at ASC').select('total').last
+         @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date.in_time_zone("Bangkok"),params[:home_id]).order('created_at ASC').select('total').last
          if @energy_first.present?
            @monthly_bar << @energy_last[0] - @energy_first.total
          else
