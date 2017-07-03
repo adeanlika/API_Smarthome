@@ -244,13 +244,13 @@ class EnergiesController < ApiController
   def get_daily(start_date)
     # koding versi baruww
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: (start_date - 1.month)..(start_date + 1.month - 1.day )).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date..(start_date + 1.month - 1.day )).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
-    @energy = @energy.where('energies.created_at' => (start_date - 1.month).in_time_zone("Bangkok")..(start_date + 1.month ).in_time_zone("Bangkok")).group_by{|t| t.created_at.beginning_of_day}
+    @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..(start_date + 1.month ).in_time_zone("Bangkok")).group_by{|t| t.created_at.beginning_of_day}
     if not @energy.empty?
-     @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+    # @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
      @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
      @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
      @daily_bar = []
@@ -273,7 +273,14 @@ class EnergiesController < ApiController
     @count.each_index do |index|
       if @count[index] != 0
         if first == index
+           @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date,params[:home_id]).order('created_at ASC').select('total').last
+           if @energy_first.present?
+           @daily_bar << @energy_last[0] - @energy_first.total
+           else
+           @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
            @daily_bar << @energy_last[0] - @energy_first[0]
+         end
+
         else
         #  @daily_bar << 1
            @daily_bar << @energy_last[counter - a] - @energy_last[counter - b]
@@ -284,8 +291,8 @@ class EnergiesController < ApiController
         @daily_bar << @count[index]
       end
    end
-   @number = Time::days_in_month(start_date.month)
-   return @daily_bar.reverse.take(@number).reverse
+  #  @number = Time::days_in_month(start_date.month)
+   return @daily_bar  #.reverse.take(@number).reverse
  else
    @empty = []
    sd = Date.parse(params[:start_date])
@@ -327,7 +334,7 @@ end
 
   def get_weekly(start_date)
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_week('energies.created_at', range: start_date - 6.week ..start_date + 6.week - 1.day).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?' ,params[:home_id]).group_by_week('energies.created_at', range: start_date - 6.week ..start_date + 6.week - 1.day).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
@@ -391,7 +398,7 @@ end
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
     @energy = @energy.where('energies.created_at' => start_date.in_time_zone("Bangkok")..(start_date + 1.year).in_time_zone("Bangkok")).group_by {|t| t.created_at.beginning_of_month}
     if not @energy.empty?
-    @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+    # @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
     @energy_last =  @energy.collect { |t, d|   { t => d.last[:total] } }
     @energy_last = @energy_last.map{|x| x.values}.collect {|ind| ind[0]}
     @monthly_bar = []
@@ -413,7 +420,13 @@ end
    @count.each_index do |index|
      if @count[index] != 0
        if first == index
-          @monthly_bar << @energy_last[0] - @energy_first[0]
+         @energy_first = Energy.where('created_at < ? AND home_id = ?',start_date,params[:home_id]).order('created_at ASC').select('total').last
+         if @energy_first.present?
+           @monthly_bar << @energy_last[0] - @energy_first.total
+         else
+           @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+           @monthly_bar << @energy_last[0] - @energy_first[0]
+         end
        else
           @monthly_bar << @energy_last[counter - a] - @energy_last[counter - b]
           a = a - 1
@@ -507,7 +520,13 @@ else
    @count.each_index do |index|
      if @count[index] != 0
        if first == index
-          @yearly_bar << @energy_last[0] - @energy_first[0]
+         @energy_first = Energy.where('created_at < ? AND home_id = ?',(start_date -  6.year).in_time_zone("Bangkok"),params[:home_id]).order('created_at ASC').select('total').last
+         if @energy_first.present?
+           @yearly_bar << @energy_last[0] - @energy_first.total
+         else
+           @energy_first = @energy.collect { |t, d|   { t => d.first[:total] } }.first.values
+           @yearly_bar << @energy_last[0] - @energy_first[0]
+         end
        else
           @yearly_bar << @energy_last[counter - a] - @energy_last[counter - b]
           a = a - 1
