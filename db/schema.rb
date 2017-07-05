@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170627010901) do
+ActiveRecord::Schema.define(version: 20170705042024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(version: 20170627010901) do
     t.boolean  "lowerflux_flag",    default: false
     t.boolean  "upperflux_flag",    default: false
     t.datetime "updated_at",                              null: false
-    t.float    "supply"
+    t.float    "supply",            default: 1300.0
     t.float    "cost_limit",        default: 100000000.0
     t.boolean  "cost_limit_flag",   default: false
     t.float    "electricity_price", default: 1467.28

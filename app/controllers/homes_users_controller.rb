@@ -59,7 +59,7 @@ class HomesUsersController < ApiController
   end
 
   def home_member
-    @member = User.joins(:homes_users).where('homes_users.home_id':2).select(:email,:image,'homes_users.is_admin')
+    @member = User.joins(:homes_users).where('homes_users.home_id': params[:home_id]).select(:email,:image,'homes_users.is_admin')
     render json: @member
   end
 
