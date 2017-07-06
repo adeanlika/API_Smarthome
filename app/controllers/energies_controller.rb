@@ -63,8 +63,8 @@ class EnergiesController < ApiController
       @energy_status = @energy_status.first[key]
       @upperenergy = Home.where('homes.id = ?',  @home.id).select("upperenergy").to_a
       @upperenergy = @upperenergy.map {|x| x.upperenergy}
-      @upperenergy = (@upperenergy * 1000)
-        if @energy_status.to_f > @upperenergy.first.to_i
+      @upperenergy = @upperenergy.first * 1000
+        if @energy_status.to_f > @upperenergy
           if @home.upperenergy_flag == false
             @energy_alert = Alert.new(alert_type: 'Energy',value: @energy_status,status: 'Energy too high',home_id: @home.id)
             if @energy_alert.save
@@ -82,7 +82,7 @@ class EnergiesController < ApiController
               @home.upperenergy_flag = true
               @home.save
           end
-        elsif @energy_status.to_f < @upperenergy.first.to_i
+        elsif @energy_status.to_f < @upperenergy
           @home.upperenergy_flag = false
           @home.save
         end
@@ -113,7 +113,7 @@ class EnergiesController < ApiController
     else
       @status = 0
     end
-    render json: @upperenergy.first.to_i
+    render json: @status
   end
 
   def get_current_energy(home_id)
@@ -148,7 +148,7 @@ class EnergiesController < ApiController
 
 
   def get_cost(home_id)
-    @home = Home.find(params[:home_id])
+    @home = Home.find(home_id)
     # Time.zone = "Bangkok"
     # d = Date.today
     # @energy = Energy.joins(:home).where('homes.id = ?', home_id).select("total,energies.created_at").order('created_at ASC')
