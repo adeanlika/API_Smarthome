@@ -662,6 +662,12 @@ else
      render json: @cost_monthly
   end
 
+  def cost_yearly
+    @home = Home.find(params[:home_id])
+    @cost_yearly = get_yearly(params[:start_date].to_date.beginning_of_year)
+    @cost_yearly = @cost_yearly.collect { |n| (n * @home.electricity_price)/1000 }
+     render json: @cost_yearly
+  end
 
 
   private
