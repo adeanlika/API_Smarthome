@@ -63,6 +63,7 @@ class EnergiesController < ApiController
       @energy_status = @energy_status.first[key]
       @upperenergy = Home.where('homes.id = ?',  @home.id).select("upperenergy").to_a
       @upperenergy = @upperenergy.map {|x| x.upperenergy}
+      @upperenergy = (@upperenergy * 1000)
         if @energy_status.to_f > @upperenergy.first.to_i
           if @home.upperenergy_flag == false
             @energy_alert = Alert.new(alert_type: 'Energy',value: @energy_status,status: 'Energy too high',home_id: @home.id)
