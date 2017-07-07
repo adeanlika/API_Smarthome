@@ -68,8 +68,8 @@ class HomesUsersController < ApiController
     @user = HomesUser.find_by(home_id: params[:home_id],user_id: @new_member.id)
     if @new_member.nil?
       @new_member = 'User Not Found'
-    elsif @user.is_admin == true
-      @new_member = 'this user is an admin'
+    elsif not @user.nil?
+      @new_member = 'this user is already a member'
     else
       @new_member = HomesUser.create(home_id: params[:home_id],user_id: @new_member.id)
     end
