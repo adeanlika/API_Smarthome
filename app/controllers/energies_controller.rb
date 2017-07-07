@@ -66,7 +66,7 @@ class EnergiesController < ApiController
       @upperenergy = @upperenergy.first * 1000
         if @energy_status.to_f > @upperenergy
           if @home.upperenergy_flag == false
-            @energy_alert = Alert.new(alert_type: 'Energy',value: @energy_status,status: 'Energy too high',home_id: @home.id)
+            @energy_alert = Alert.new(alert_type: 'Energy',value: @energy_status,status: 'Energy too high'+@energy_status,home_id: @home.id)
             if @energy_alert.save
               fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
               registration_ids = []
