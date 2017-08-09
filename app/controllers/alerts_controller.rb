@@ -84,11 +84,11 @@ class AlertsController < ApiController
          @current_notif << @lowerco
       end
       if @home.upperflux_flag == true
-         @upperflux = Alert.where('alert_type = Light' && 'status = Light too high').order('created_at ASC').last.to_json
+         @upperflux = Alert.where('alert_type = Light' && 'status = Flux too high').order('created_at ASC').last.to_json
          @current_notif << @upperflux
-      end
+
       if @home.lowerflux_flag == true
-         @lowerflux = Alert.where('alert_type = Light' && 'status = Light too low').order('created_at ASC').last.to_json
+         @lowerflux = Alert.where('alert_type = Light' && 'status = Flux too low').order('created_at ASC').last.to_json
          @current_notif << @lowerflux
       end
     render json: @current_notif.map{ |s| JSON[s] }.sort_by{|i| -i['created_at'].to_time.to_i}#sort_by { |hsh| hsh['created_at'] }

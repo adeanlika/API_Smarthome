@@ -36,20 +36,13 @@ class RelaysController < ApiController
     if @relay.update(aktuator_params)
       @joins = Relay.joins(device: :home).where('devices.id = ? AND homes.id = ?', params[:device_id], params[:home_id])
       @gateway_id = @joins.pluck('homes.gateway_id').to_sentence
-      puts "#{@gateway_id}"
       @product_id = @joins.select("devices.product_id").map{ |h| h[:product_id]}.to_sentence
-      puts "#{@product_id}"
-      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing,:ac_brand).join("")
-      puts "#{@data}"
-      # Server that the input is in XML format.
-      #     req.Server that the input is in XML format.
-      #     req.set_coServer that the input is in XML format.
-      #     req.set_co
-      url = URI.parse('http://developer.idigi.com/ws/sci')
+      @data = @joins.pluck(:relay1, :relay2, :relay3, :relay4, :relay5, :relay6, :relay7, :relay8, :ac_enable, :ac_power, :ac_mode, :ac_temp, :ac_speed,:ac_swing,:ac_brand).join("").gsub(/\s+/,"")
+      puts @data
+        url = URI.parse('http://developer.idigi.com/ws/sci')
 
-      # Create a HTTPRequest Object based on HTTP Method.
+  # Create a HTTPRequest Object based on HTTP Method.
       req = Net::HTTP::Post.new(url.path)
-
       # Sets The Request up for Basic Authentication.
       # Replace YourUsername and YourPassword with your username and password respectively.
       req.basic_auth 'wmustika', '$martsystem'
@@ -71,15 +64,12 @@ class RelaysController < ApiController
           req.add_field("Accept", "text/xml")
           # Create an HTTP connection and send data to capture response.
           res = Net::HTTP.new(url.host, url.port).start {|http| http.request(req) }
-
           # Print the Response!
           puts res.body
-
           # Print an Error if the response was not completely successful.
           case res
           when Net::HTTPSuccess, Net::HTTPRedirection
-            #Ok
-          else
+            else
             res.error!
           end
 

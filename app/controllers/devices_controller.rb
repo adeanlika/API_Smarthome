@@ -104,13 +104,13 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Temperature too high", title: "Temperature Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Temperature too low", title: "Temperature Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
            end
          elsif params[:te].to_i > @upperte.first.to_i
            if @home.uppertemp_flag == false
-              @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too high',home_id: @home.id,device_id: @device.id)
+              @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature level is too high',home_id: @home.id,device_id: @device.id)
               if @alert.save
                  @home.uppertemp_flag = true
                  @home.save
@@ -121,7 +121,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Temperature too low", title: "Temperature Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Temperature level is too high", title: "Temperature Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
            end
@@ -163,7 +163,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Humidity too high", title: "Humidity Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Humidity level is too low", title: "Humidity Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
            end
@@ -180,7 +180,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Humidity too high", title: "Humidity Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Humidity level is too high", title: "Humidity Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
             end
@@ -212,7 +212,7 @@ class DevicesController < ApiController
         @upperco = @upperco.map {|x| x.upperco}
         if params[:co2].to_i < @lowerco.first.to_i
           if @home.lowerco_flag == false
-             @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too low',home_id: @home.id,device_id: @device.id)
+             @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'Carbondioxide too low',home_id: @home.id,device_id: @device.id)
              if @alert.save
                 @home.lowerco_flag = true
                 @home.save
@@ -223,13 +223,13 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level too high", title: "Carbondioxide Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too low", title: "Carbondioxide Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
            end
          elsif  params[:co2].to_i > @upperco.first.to_i
            if @home.upperco_flag == false
-              @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'CO2 too high',home_id: @home.id,device_id: @device.id)
+              @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'Carbondioxide too high',home_id: @home.id,device_id: @device.id)
               if @alert.save
                  @home.upperco_flag = true
                  @home.save
@@ -240,7 +240,7 @@ class DevicesController < ApiController
                 end
                end
                if registration_ids.any?
-                  options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level too low", title: "Carbondioxide Warning"  }}
+                  options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too high", title: "Carbondioxide Warning"  }}
                   response = fcm.send(registration_ids, options)
                end
              end
@@ -283,7 +283,7 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity too high", title: "Light Intensity Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity is too low", title: "Light Intensity Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
           end
@@ -300,7 +300,7 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity too low", title: "Light Intensity Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity too high", title: "Light Intensity Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
            end
