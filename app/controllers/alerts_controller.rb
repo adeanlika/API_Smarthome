@@ -34,12 +34,13 @@ class AlertsController < ApiController
 
   # DELETE /energy_alert_logs/1
   def destroy
-  if  @alert.destroy
-    render json: true
-  else
-    render json: false
+    if  @alert.destroy
+      render json: true
+    else
+      render json: false
+    end
   end
-  end
+
   def alert_by_date
     @alert = Alert.all.order('created_at DESC')
     @alert = @alert.group_by {|t| t.created_at.beginning_of_day}
@@ -48,6 +49,7 @@ class AlertsController < ApiController
     @alert = @alert.each.map {|value| Hash[keys.zip(value)]}
     render json: @alert
   end
+
   def current_notif
       @home = Home.find(params[:home_id])
       @current_notif = []
@@ -86,7 +88,7 @@ class AlertsController < ApiController
       if @home.upperflux_flag == true
          @upperflux = Alert.where('alert_type = Light' && 'status = Flux too high').order('created_at ASC').last.to_json
          @current_notif << @upperflux
-
+      end
       if @home.lowerflux_flag == true
          @lowerflux = Alert.where('alert_type = Light' && 'status = Flux too low').order('created_at ASC').last.to_json
          @current_notif << @lowerflux
