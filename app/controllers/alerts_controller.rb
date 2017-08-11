@@ -62,35 +62,35 @@ class AlertsController < ApiController
         @current_notif << @cost
       end
       if @home.uppertemp_flag == true
-         @uppertemp = Alert.where(:alert_type => "Temperature",:status => "Temperature too high").order('created_at ASC').last.to_json
+         @uppertemp = Alert.where(:alert_type => "Temperature",:status => "Temperature level is too high").order('created_at ASC').last.to_json
          @current_notif << @uppertemp
       end
       if @home.lowertemp_flag == true
-          @lowertemp = Alert.where(:alert_type => "Temperature",:status => "Temperature too low").order('created_at ASC').last.to_json
+          @lowertemp = Alert.where(:alert_type => "Temperature",:status => "Temperature level is too low").order('created_at ASC').last.to_json
           @current_notif << @lowertemp
       end
       if @home.upperhum_flag == true
-         @upperhum = Alert.where('alert_type = Humidity' && 'status = Humidity too high').order('created_at ASC').last.to_json
+         @upperhum = Alert.where(:alert_type => "Humidity", :status => "Humidity level is too high").order('created_at ASC').last.to_json
          @current_notif << @upperhum
       end
       if @home.lowerhum_flag == true
-         @lowerhum = Alert.where('alert_type = Humidity' && 'status = Humidity too low').order('created_at ASC').last.to_json
+         @lowerhum = Alert.where(:alert_type => "Humidity",:status => "Humidity level is too low").order('created_at ASC').last.to_json
          @current_notif << @lowerhum
       end
       if @home.upperco_flag == true
-         @upperco = Alert.where('alert_type = Carbondioxide' && 'status = Carbondioxide too high').order('created_at ASC').last.to_json
+         @upperco = Alert.where(:alert_type => "Carbondioxide",:status =>  "Carbondioxide level is too high").order('created_at ASC').last.to_json
          @current_notif << @upperco
       end
       if @home.lowerco_flag == true
-         @lowerco = Alert.where('alert_type = Carbondioxide' && 'status = Carbondioxide too low').order('created_at ASC').last.to_json
+         @lowerco = Alert.where(:alert_type => "Carbondioxide",:status =>  "Carbondioxide level is too low").order('created_at ASC').last.to_json
          @current_notif << @lowerco
       end
       if @home.upperflux_flag == true
-         @upperflux = Alert.where('alert_type = Light' && 'status = Flux too high').order('created_at ASC').last.to_json
+         @upperflux = Alert.where( :alert_type => "Light",:status =>  "Light intensity too high").order('created_at ASC').last.to_json
          @current_notif << @upperflux
       end
       if @home.lowerflux_flag == true
-         @lowerflux = Alert.where('alert_type = Light' && 'status = Flux too low').order('created_at ASC').last.to_json
+         @lowerflux = Alert.where(:alert_type => "Light",:status => "Light intensity too low").order('created_at ASC').last.to_json
          @current_notif << @lowerflux
       end
     render json: @current_notif.map{ |s| JSON[s] }.sort_by{|i| -i['created_at'].to_time.to_i}#sort_by { |hsh| hsh['created_at'] }

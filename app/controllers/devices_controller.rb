@@ -93,7 +93,7 @@ class DevicesController < ApiController
         @upperte = @upperte.map {|x| x.uppertemp}
          if params[:te].to_i < @lowerte.first.to_i
            if @home.lowertemp_flag == false
-              @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature too low', home_id: @home.id,device_id: @device.id)
+              @alert = Alert.new(alert_type: 'Temperature',value: params[:te],status: 'Temperature level is too low', home_id: @home.id,device_id: @device.id)
               if @alert.save
                  @home.lowertemp_flag = true
                  @home.save
@@ -152,7 +152,7 @@ class DevicesController < ApiController
         @upperhum = @upperhum.map {|x| x.upperhum}
         if params[:hu].to_i < @lowerhum.first.to_i
            if @home.lowerhum_flag == false
-              @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too low',home_id: @home.id,device_id: @device.id)
+              @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity level is too low',home_id: @home.id,device_id: @device.id)
               if @alert.save
                  @home.lowerhum_flag = true
                  @home.save
@@ -169,7 +169,7 @@ class DevicesController < ApiController
            end
         elsif  params[:hu].to_i > @upperhum.first.to_i
            if @home.upperhum_flag == false
-              @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity too high',home_id: @home.id,device_id: @device.id)
+              @alert = Alert.new(alert_type: 'Humidity',value: params[:hu],status: 'Humidity level is too high',home_id: @home.id,device_id: @device.id)
               if @alert.save
                  @home.upperhum_flag = true
                  @home.save
@@ -212,24 +212,24 @@ class DevicesController < ApiController
         @upperco = @upperco.map {|x| x.upperco}
         if params[:co2].to_i < @lowerco.first.to_i
           if @home.lowerco_flag == false
-             @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'Carbondioxide too low',home_id: @home.id,device_id: @device.id)
-             if @alert.save
+             @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co2],status: 'Carbondioxide level is too low',home_id: @home.id,device_id: @device.id)
+           if @alert.save
                 @home.lowerco_flag = true
                 @home.save
                 fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
                 registration_ids = []
                 @home.users.each do |u|
                 registration_ids.push(u.fcm_token)
-              end
-             end
-             if registration_ids.any?
+               end
+          end
+          if registration_ids.any?
                 options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too low", title: "Carbondioxide Warning"  }}
                 response = fcm.send(registration_ids, options)
-             end
-           end
-         elsif  params[:co2].to_i > @upperco.first.to_i
+          end
+         end
+        elsif  params[:co2].to_i > @upperco.first.to_i
            if @home.upperco_flag == false
-              @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co],status: 'Carbondioxide too high',home_id: @home.id,device_id: @device.id)
+              @alert = Alert.new(alert_type: 'Carbondioxide',value: params[:co2],status: 'Carbondioxide level is too high',home_id: @home.id,device_id: @device.id)
               if @alert.save
                  @home.upperco_flag = true
                  @home.save
@@ -238,13 +238,13 @@ class DevicesController < ApiController
                  @home.users.each do |u|
                  registration_ids.push(u.fcm_token)
                 end
-               end
+              end
                if registration_ids.any?
                   options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too high", title: "Carbondioxide Warning"  }}
                   response = fcm.send(registration_ids, options)
                end
-             end
-         else
+        end
+        else
            @home.upperco_flag = false
            @home.save
            @home.lowerco_flag = false
@@ -272,7 +272,7 @@ class DevicesController < ApiController
         @upperflux = @upperflux.map {|x| x.upperflux}
         if params[:light].to_i < @lowerflux.first.to_i
           if @home.lowerflux_flag == false
-             @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too low',home_id: @home.id,device_id: @device.id)
+             @alert = Alert.new(alert_type: 'Light',value: params[:light],status: 'Light intensity too low',home_id: @home.id,device_id: @device.id)
              if @alert.save
                 @home.lowerflux_flag = true
                 @home.save
@@ -283,13 +283,13 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity is too low", title: "Light Intensity Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Light intensity too low", title: "Light Intensity Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
           end
         elsif params[:light].to_i > @upperflux.first.to_i
           if @home.upperflux_flag == false
-             @alert = Alert.new(alert_type: 'Light',value: params[:co],status: 'Flux too high',home_id: @home.id,device_id: @device.id)
+             @alert = Alert.new(alert_type: 'Light',value: params[:light],status: 'Light intensity too high',home_id: @home.id,device_id: @device.id)
              if @alert.save
                 @home.upperflux_flag = true
                 @home.save
@@ -300,11 +300,11 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Light Intensity too high", title: "Light Intensity Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Light intensity too high", title: "Light Intensity Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
-           end
-         else
+          end
+        else
            @home.upperflux_flag = false
            @home.save
            @home.lowerflux_flag = false
@@ -339,11 +339,12 @@ class DevicesController < ApiController
     @light = Light.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("lights.created_at ASC").select('lights.value as light').last.as_json
     @motion = Motion.joins(device: :home).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).order("motions.created_at ASC").select('motions.value as motion').last.as_json
     @sensor = @humidity.merge(@temperature).merge(@carbondioxide).merge(@light).merge(@motion)
+    render json: @sensor
+  end
     # @sensor = @sensor.delete("id")
 
   #@current = Home.joins( :devices => [:humidities,:temperatures,:carbondioxides,:motions,:lights]).where('homes.id = ? AND devices.id = ?', params[:home_id],params[:device_id] ).select("humidities.value as humidity, devices.id, homes.name, temperatures.value as temperature, motions.value as motion, carbondioxides.value as CO2, lights.value as flux").last
-    render json: @sensor
-  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_device
