@@ -669,6 +669,22 @@ else
      render json: @cost_yearly
   end
 
+  def saving_daily
+    Cron.saving_daily
+#     Time.zone ="Bangkok"
+#     @start_date = (Date.yesterday).to_date
+#
+#     @daily_max = Home.find(params[:home_id]).upperenergy / 30
+#     @energy_last = Energy.where('home_id = ?',params[:home_id]).where('created_at BETWEEN ? AND ?', @start_date.beginning_of_day,@start_date.end_of_day).pluck(:total).last.to_json
+#     @energy_first = Energy.where('created_at < ? AND home_id = ?',(@start_date - 1 .day).in_time_zone("Bangkok"),params[:home_id]).order('created_at ASC').pluck('total').last
+#     # @energy_last = @energy_last.pluck(:total)
+#
+#     @presentage = (((@energy_first.to_f - @energy_last.to_f)/@daily_max.to_f) * 100)
+#     # @energy = @energy_last - @energy_first
+# #    @current_energy =  @energy.collect { |month, total| { month => total.last[:total] - total.first[:total] } }
+    render json: @presentage
+
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

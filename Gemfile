@@ -57,3 +57,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'rails_admin'
 gem 'cancancan'
 gem 'erd'
+gem 'whenever', :require => false

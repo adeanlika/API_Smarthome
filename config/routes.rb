@@ -59,6 +59,7 @@ get 'data_sensor', to: 'devices#get_data_sensor'
     post 'cost_daily', to: 'energies#cost_daily'
     post 'cost_monthly', to: 'energies#cost_monthly'
     post 'cost_yearly', to: 'energies#cost_yearly'
+    get 'energy_saving', to: 'energies#saving_daily'
       resources :devices do
         get 'current_sensor', to: 'devices#current_sensor'
         post 'carbondioxides_daily', to: 'carbondioxides#daily'
