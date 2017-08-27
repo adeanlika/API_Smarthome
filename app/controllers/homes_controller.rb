@@ -69,19 +69,19 @@ def set_supply
   @home = Home.find(params[:home_id])
   if params[:supply].present?
     @home.update(supply: params[:supply])
-    if @supply = 1300
+    if @supply == 1300
        @home.update(electricity_price: 1467.28)
        @home.save
-    elsif @supply = 2200
+    elsif @supply == 2200
        @home.update(electricity_price: 1467.28)
        @home.save
-    elsif @supply = 3500
+    elsif @supply == 3500
        @home.update(electricity_price: 1467.28)
        @home.save
-    elsif @supply = 5500
+    elsif @supply == 5500
        @home.update(electricity_price: 1467.28)
        @home.save
-    elsif @supply = 6600
+    elsif @supply == 6600
        @home.update(electricity_price: 1467.28)
        @home.save
     end

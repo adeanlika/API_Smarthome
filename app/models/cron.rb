@@ -12,12 +12,12 @@ class Cron
         @homes.each do |home|
           @start_date = (Date.yesterday).to_date
 
-          @daily_max = Home.find(home.id).upperenergy / 30
+          @daily_max = Home.find(home.id).upperenergy * 1000 / 30
           @energy_last = Energy.where('home_id = ?',home.id).where('created_at BETWEEN ? AND ?', @start_date.beginning_of_day,@start_date.end_of_day).pluck(:total).last.to_json
-          @energy_first = Energy.where('created_at < ? AND home_id = ?',(@start_date - 1 .day).in_time_zone("Bangkok"),home.id).order('created_at ASC').pluck('total').last
+          @energy_first = Energy.where('created_at < ? AND home_id = ?',(@start_date).in_time_zone("Bangkok"),home.id).order('created_at ASC').pluck('total').last
           # @energy_last = @energy_last.pluck(:total)
 
-          @presentage = (((@energy_last.to_f - @energy_first.to_f)/@daily_max.to_f) * 100)
+          @presentage = (((@daily_max.to_f - (@energy_last.to_f - @energy_first.to_f))/@daily_max.to_f) * 100)
 
           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
           registration_ids = []
