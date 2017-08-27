@@ -75,7 +75,7 @@ class EnergiesController < ApiController
               end
             end
             if registration_ids.any?
-               options = {data:{code: "ALERT"}, notification: {body: "Energy too high", title: "Energy Warning"  }}
+               options = {data:{code: "ALERT"}, notification: {body: "Energy too high", title: "#{@home.name}Energy Warning"  }}
                response = fcm.send(registration_ids, options)
             end
               @status = @status + 1
