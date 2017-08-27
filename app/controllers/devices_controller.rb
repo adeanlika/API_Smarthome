@@ -104,7 +104,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Temperature too low", title: "Temperature Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Temperature level is too low (#{@temperature.value})", title: "#{@device.name} Temperature Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
            end
@@ -121,7 +121,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Temperature level is too high", title: "Temperature Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Temperature level is too high (#{@temperature.value})", title: "#{@device.name} Temperature Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
            end
@@ -163,7 +163,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Humidity level is too low", title: "Humidity Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Humidity level is too low (#{@humidities.value})", title: "#{@device.name} Humidity Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
            end
@@ -180,7 +180,7 @@ class DevicesController < ApiController
                end
               end
               if registration_ids.any?
-                 options = {data:{code: "ALERT"}, notification: {body: "Humidity level is too high", title: "Humidity Warning"  }}
+                 options = {data:{code: "ALERT"}, notification: {body: "Humidity level is too high (#{@humidities.value})", title: "#{@device.name} Humidity Warning"  }}
                  response = fcm.send(registration_ids, options)
               end
             end
@@ -223,7 +223,7 @@ class DevicesController < ApiController
                end
           end
           if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too low", title: "Carbondioxide Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too low (#{@carbondioxides.value})", title: "#{@device.name} Carbondioxide Warning"  }}
                 response = fcm.send(registration_ids, options)
           end
          end
@@ -240,7 +240,7 @@ class DevicesController < ApiController
                 end
               end
                if registration_ids.any?
-                  options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too high", title: "Carbondioxide Warning"  }}
+                  options = {data:{code: "ALERT"}, notification: {body: "Carbondioxide level is too high (#{@carbondioxides.value})", title: "#{@device.name} Carbondioxide Warning"  }}
                   response = fcm.send(registration_ids, options)
                end
         end
@@ -283,7 +283,7 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Light intensity too low", title: "Light Intensity Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Light intensity too low (#{@light.value})", title: "#{@device.name} Light Intensity Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
           end
@@ -300,7 +300,7 @@ class DevicesController < ApiController
               end
              end
              if registration_ids.any?
-                options = {data:{code: "ALERT"}, notification: {body: "Light intensity too high", title: "Light Intensity Warning"  }}
+                options = {data:{code: "ALERT"}, notification: {body: "Light intensity too high (#{@light.value})", title: "#{@device.name} Light Intensity Warning"  }}
                 response = fcm.send(registration_ids, options)
              end
           end
