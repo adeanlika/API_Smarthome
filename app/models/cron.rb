@@ -22,7 +22,7 @@ class Cron
           fcm = FCM.new("AAAAp97oDyY:APA91bFTmSnZxPTHJBvitG06LR8AgCGJX6gpa5CuHJDGFMi2WTs2ZcV2TgjiclUwAJ8i8V_BsqhhEFX5RPBC-Wbx1bsoJJDAeJESTYyCGgpgXESMMdBvoqvTT36AzpFd-olhNnYt5obH")
           registration_ids = []
           registration_ids.push(@fcm_token)
-          options = {data:{code: "SAVING"}, notification: {body: "You saved #{@presentage} %", title: "Daily energy saving"  }}
+          options = {data:{code: "SAVING"}, notification: {body: "Yesterday, you saved #{@presentage} % energy", title: "#{home.name}"  }}
           response = fcm.send(registration_ids, options)
         end
       end
