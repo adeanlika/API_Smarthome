@@ -86,7 +86,7 @@ class DevicesController < ApiController
         #    options = {data:{code: "UPDATE_TEMPERATURE"}}
         #    response = fcm.send(registration_ids, options)
         # end
-        @status = @status + 11111111
+        @status = @status + 11111111222222223333333344444444
         @lowerte = Home.where('homes.id = ?', @device.home_id).select("lowertemp").to_a
         @lowerte = @lowerte.map {|x| x.lowertemp}
         @upperte = Home.where('homes.id = ?', @device.home_id).select("uppertemp").to_a
@@ -145,7 +145,7 @@ class DevicesController < ApiController
         #       options = {data:{code: "UPDATE_HUMIDITY"}}
         #       response = fcm.send(registration_ids, options)
         # end
-        @status = @status + 11111111
+        @status = @status + 11111111111111111111111111111111
         @lowerhum = Home.where('homes.id = ?', @device.home_id).select("lowerhum").to_a
         @lowerhum = @lowerhum.map {|x| x.lowerhum}
         @upperhum = Home.where('homes.id = ?', @device.home_id).select("upperhum").to_a
@@ -205,7 +205,7 @@ class DevicesController < ApiController
         #    options = {data:{code: "UPDATE_CARBONDIOXIDE"}}
         #    response = fcm.send(registration_ids, options)
         # end
-        @status = @status + 11111111
+        @status = @status + 11111111111111111111111111111111
         @lowerco = Home.where('homes.id = ?', @device.home_id).select("lowerco").to_a
         @lowerco = @lowerco.map {|x| x.lowerco}
         @upperco = Home.where('homes.id = ?', @device.home_id).select("upperco").to_a
@@ -265,7 +265,7 @@ class DevicesController < ApiController
         #    options = {data:{code: "UPDATE_LIGHT"}}
         #    response = fcm.send(registration_ids, options)
         # end
-        @status = @status + 11111111
+        @status = @status + 11111111111111111111111111111111
         @lowerflux= Home.where('homes.id = ?', @device.home_id).select("lowerflux").to_a
         @lowerflux = @lowerflux.map {|x| x.lowerflux}
         @upperflux= Home.where('homes.id = ?', @device.home_id).select("upperflux").to_a
@@ -325,7 +325,7 @@ class DevicesController < ApiController
             options = {data:{code: "UPDATE_SENSOR"}}
             response = fcm.send(registration_ids, options)
          end
-          @status = @status + 11111111
+          @status = @status + 11111111111111111111111111111111
        end
 
      render json: @status
