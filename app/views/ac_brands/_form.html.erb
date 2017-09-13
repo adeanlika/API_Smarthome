@@ -1,0 +1,27 @@
+<%= form_for(ac_brand) do |f| %>
+  <% if ac_brand.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ac_brand.errors.count, "error") %> prohibited this ac_brand from being saved:</h2>
+
+      <ul>
+      <% ac_brand.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :brand %>
+    <%= f.text_field :brand %>
+  </div>
+
+  <div class="field">
+    <%= f.label :code %>
+    <%= f.text_field :code %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

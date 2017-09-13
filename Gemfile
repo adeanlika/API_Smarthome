@@ -58,3 +58,4 @@ gem 'rails_admin'
 gem 'cancancan'
 gem 'erd'
 gem 'whenever', :require => false
+gem 'rails-erd', require: false

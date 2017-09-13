@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Brand:</strong>
+  <%= @ac_brand.brand %>
+</p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @ac_brand.code %>
+</p>
+
+<%= link_to 'Edit', edit_ac_brand_path(@ac_brand) %> |
+<%= link_to 'Back', ac_brands_path %>

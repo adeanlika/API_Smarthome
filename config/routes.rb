@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :ac_brands
   root to: redirect('/admin')
   devise_for :superusers, controllers: {
     sessions: 'superusers/sessions',
