@@ -24,6 +24,7 @@ class Cron
           registration_ids.push(@fcm_token)
           options = {data:{code: "SAVING"}, notification: {body: "Yesterday, you saved #{@presentage} % energy", title: "#{home.name}"  }}
           response = fcm.send(registration_ids, options)
+          p "Yesterday, #{home.name} saved #{@presentage} % energy #{Time.now}"
         end
       end
 

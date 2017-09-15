@@ -15,7 +15,7 @@ set :output, "log/cron_log.log"
 # end
 # end
 #
-every 1.day, at: '08:00 pm' do
+every 1.day, at: '10:30 am' do
   runner "Cron.saving_daily"
 end
 
