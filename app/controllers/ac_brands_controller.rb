@@ -4,11 +4,12 @@ class AcBrandsController < ApplicationController
   # GET /ac_brands
   def index
     @ac_brands = AcBrand.all
-    render json: @ac_brands 
+    render json: @ac_brands
   end
 
   # GET /ac_brands/1
   def show
+      render json: @ac_brand
   end
 
   # GET /ac_brands/new
