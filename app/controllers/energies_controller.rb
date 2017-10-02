@@ -1,7 +1,7 @@
 class EnergiesController < ApiController
-  before_action :set_energy, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, except: [:get_data_energy]
-  # GET /energies
+  # before_action :set_energy, only: [:show, :update, :destroy]
+  # before_action :authenticate_user!, except: [:get_data_energy]
+  # # GET /energies
   def index
     @energies = Energy.all
 
@@ -233,7 +233,7 @@ class EnergiesController < ApiController
   def get_daily(start_date)
     # koding versi baruww
     Time.zone = "Bangkok"
-    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date.in_time_zone("Bangkok")..(start_date + 1.month - 1.day ).in_time_zone("Bangkok")).count(:total)
+    @count = Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: start_date.in_time_zone("Bangkok")..(start_date + 1.month).in_time_zone("Bangkok")).count(:total)
     @count = @count.collect {|ind| ind[1]}
 
     @energy = Energy.joins(:home).where('homes.id = ?', params[:home_id]).select("total,energies.created_at").order('created_at ASC')
@@ -281,7 +281,7 @@ class EnergiesController < ApiController
       end
    end
   #  @number = Time::days_in_month(start_date.month)
-   return @daily_bar  #.reverse.take(@number).reverse
+   return @daily_bar.first @daily_bar.size - 1  #.reverse.take(@number).reverse
  else
    @empty = []
    sd = Date.parse(params[:start_date])
