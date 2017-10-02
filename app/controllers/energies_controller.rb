@@ -609,7 +609,7 @@ else
   end
   def power_daily
     @start_date = params[:start_date].to_date.beginning_of_month
-    @tca= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month - 1.day).in_time_zone("Bangkok")).average(:pwr)
+    @tca= Energy.joins(:home).where('homes.id = ?',params[:home_id]).group_by_day('energies.created_at', range: @start_date.in_time_zone("Bangkok")..(@start_date + 1.month).in_time_zone("Bangkok")).average(:pwr)
     @tca= @tca.to_a
     keys = [:date, :value]
     @tca = @tca.each.map {|value| Hash[keys.zip(value)]}
