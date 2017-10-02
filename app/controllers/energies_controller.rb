@@ -614,7 +614,8 @@ else
     keys = [:date, :value]
     @tca = @tca.each.map {|value| Hash[keys.zip(value)]}
     #@Humidity.shift
-    render json: @tca.first @tca.size - 1
+    @tca = @tca.first @tca.size - 1
+    render json: @tca
 
   end
 
